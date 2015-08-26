@@ -1,0 +1,2 @@
+* Moving Averages Irregular Time Series
+  http://www.eckner.com/research.html

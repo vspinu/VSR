@@ -1,0 +1,18 @@
+Package: VSR
+Title: Personal Utilities
+Version: 0.0.0.9000
+Authors@R: person("Vitalie", "Spinu", , "spinuvit@gmail.com", role = c("aut", "cre"))
+Description: Personal Utilities
+Depends: R (>= 3.1.1)
+Imports: 
+    Rcpp,
+    lubridate,
+    data.table
+Suggests: 
+    plyr,
+    dplyr,
+    ggplo2,
+    reshape
+License: GPL
+LazyData: true
+LinkingTo: Rcpp

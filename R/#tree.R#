@@ -1,0 +1,53 @@
+
+
+### RPART TREES
+path_to_rpart_root <- function(node) {
+    ## get all ancestors of node
+    if(node == 1) node
+    else c(node, Recall(node %/% 2))
+}
+
+## short_levs <- function(levels){
+##     levels <- gsub("(.).+ (.)[^ ]+$", "\\1\\2", levels)
+##     gsub("^(.)[a-z]+$", "\\1", levels)
+## }
+
+predict_rpart_nodes <- function(object, newdata, na.action = na.pass) {
+    where <-
+        if (missing(newdata)) 
+            object$where
+        else {
+            if (is.null(attr(newdata, "terms"))) {
+                Terms <- delete.response(object$terms)
+                newdata <- model.frame(Terms, newdata, na.action = na.action, 
+                                       xlev = attr(object, "xlevels"))
+                if (!is.null(cl <- attr(Terms, "dataClasses"))) 
+                    .checkMFClasses(cl, newdata, TRUE)
+            }
+            rpart:::pred.rpart(object, rpart:::rpart.matrix(newdata))
+        }
+    as.integer(row.names(object$frame))[where]
+}
+
+plot_rpart_path <- function(rpart, node, type = 2, extra = 2, tweak = 1.2, nn = T, light = T){
+    library(rpart.plot)
+    nodes <- as.numeric(row.names(rpart$frame))
+    inpath <- nodes %in% path_to_rpart_root(node)
+    bcols <- "DarkRed"
+    if(light){
+        cols <- ifelse(inpath, "steelblue", "gray60")
+        bcols[inpath] <- c("seagreen3", "lightpink3")[rpart$frame$yval[inpath]]
+        if(rpart$method == "class")
+            bcols <- c("seagreen2", "lightpink2")[rpart$frame$yval]
+    } else {
+        cols <- ifelse(inpath, "steelblue", "gray30")
+        if(rpart$method == "class")
+            bcols <- c("ForestGreen", "DarkRed")[rpart$frame$yval]        
+    }
+    lwds <- c(1, 2)[inpath + 1L]
+    dh(prp(rpart, varlen = 0, type = type, faclen = 1,
+           ycompress = F, ycompact = F,
+           tweak = tweak, extra = extra, nn = nn, 
+           col = cols, branch.col = cols, split.col = cols, nn.col = cols,
+           border.col = bcols, lwd = lwds))    
+}

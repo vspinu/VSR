@@ -1,0 +1,2 @@
+12/15/2012:
+Fixed bug reported by Jan Sulmont in 'rolling_max' and 'rolling_min'.

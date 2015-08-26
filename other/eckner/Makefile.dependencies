@@ -1,0 +1,2 @@
+test.o: test.c operators.h
+operators.o: operators.c operators.h
