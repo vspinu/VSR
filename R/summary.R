@@ -45,8 +45,8 @@ ptab <- ptable <- function(..., margin = NULL){
   prop.table(base::table(...), margin)
 }
 
-qtab <- qtable <- function(...){
-  dots <- lapply(list(...), qcut)
+qtab <- qtable <- function(..., k = 10){
+  dots <- lapply(list(...), qcut, k = k)
   do.call(base::table, dots)
 }
 
@@ -81,7 +81,7 @@ ptabna <- function(..., margin = NULL){
     }
 }
 
-.which_qrange <- function(var, range, max_levels){
+which_qrange <- function(var, range, max_levels){
     if(is.character(var))
         rep.int(T, length(var))
     else if(is.factor(var)){
@@ -101,10 +101,10 @@ setGeneric("qrange",
                if(is.null(range)) return(var)
                if(is.factor(var)){
                    if(length(labels(var)) > max_levels){
-                       which <- .which_qrange(var, range, max_levels)
+                       which <- which_qrange(var, range, max_levels)
                        droplevels(var[which])
                    } else var
-               } else var[.which_qrange(var, range, max_levels)]
+               } else var[which_qrange(var, range, max_levels)]
            },
            signature = "var")
 
@@ -123,6 +123,17 @@ qrange10 <- function(var) qrange(var, c(.1, .9))
 xdiff <- function(A, B){
     list("A-B" = setdiff(A, B),
          "B-A" = setdiff(B, A))
+}
+
+keep_k_levels <- function(f, k = 7, other_label = "OTHER", includeNA = T){
+    if(includeNA)
+        f[is.na(f)] <- "NA"
+    f <- as.factor(f)
+    best <- head(names(tab(f)), k)
+    levs <- levels(f)
+    levs[!levs %in% best] <- other_label
+    levels(f) <- levs
+    f
 }
 
 multiple_matches <- function(dt){

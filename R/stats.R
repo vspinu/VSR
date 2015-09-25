@@ -21,7 +21,7 @@ kmeans_outliers <- function(data, N = .05, centers = NULL, ...){
     head(order(distances, decreasing = T), N)
 }
 
-get_terms <- function(fit, vars = NULL){
+get_terms <- function(fit, vars = NULL, qrange = c(.02, .98), sample = 1000){
     if(is(fit, "gbm")) {
         if(is.null(vars))
             vars <- fit$var.names
@@ -37,15 +37,27 @@ get_terms <- function(fit, vars = NULL){
         do.call(rbind,
                 mapply(function(x, nm){
                     if(!is.factor(x$x)){
-                        N <- 1000
-                        if(nrow(x) > N)
-                            x <- x[sample(1:nrow(x), N), ]
-                        min <- knots[[nm]][[1]]
-                        max <- knots[[nm]][length(knots[[nm]])]
-                        x <- x[x$x > min & x$x < max, ]
+                        if(nrow(x) > sample)
+                            x <- x[sample(1:nrow(x), sample), ]
+                        if(!is.null(qrange))
+                            x <- x[which_qrange(x$x, qrange), ]
                         cbind(as.data.frame(x), var = nm)
                     }
                 }, terms_data, names(terms_data), SIMPLIFY = F))
     }
+}
+
+ggterms <- function(fit, vars = NULL, qrange = c(.02, .98), sample = 1000, facet = T){
+    terms <- get_terms(fit, vars, qrange, sample)
+    ggplot(terms, aes_string("x", "y", group = "var")) +
+        (if(facet) geom_line() else geom_line(color = var)) + 
+        (if(facet) facet_wrap(~ var , scales = "free_x"))  
+}
+
+
+quantile_knots <- qknots <-
+    function(x, k = 4, alpha = .02){
+        breaks <- seq(alpha, 1 - alpha, length.out = k + 2)
+        unique(quantile(x, breaks, na.rm = T))
 }
 

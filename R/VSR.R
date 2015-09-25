@@ -11,7 +11,8 @@ NULL
 DF <- data.frame
 DT <- data.table
 l <- list
-mfrow <- function(r = 1, c = 1) par(mfrow = c(c, r))
+mfrow <- function(r = 1, c = 1) par(mfrow = c(r, c))
+mfcol <- function(r = 1, c = 1) par(mfcol = c(c, r))
 ldply <- function(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE, 
                   .parallel = FALSE, .paropts = NULL, .id = NA)
   setDT(plyr::ldply(.data = .data, .fun = .fun, ..., .progress = .progress, .inform = .inform,
