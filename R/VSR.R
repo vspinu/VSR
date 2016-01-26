@@ -50,20 +50,6 @@ peval <- function(expr, across = list()){
   out
 }
 
-assignCommandArgs <- function(..., envir = .GlobalEnv, collapse = T){
-  dots <- list(...)
-  stopifnot(all(nzchar(names(dots))))
-  args <- commandArgs(T)
-  for(i in seq_along(args))
-    dots[[i]] <- as(args[[i]], class(dots[[i]]))
-  for(nm in names(dots)){
-    assign(nm, dots[[nm]], envir = envir)
-  }
-  if(collapse){
-    paste(lapply(dots, as.character), collapse = "_")
-  } else
-    dots
-}
 
 ## other
 tag <- function(...){

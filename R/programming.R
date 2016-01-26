@@ -1,3 +1,19 @@
+assignCommandArgs <- function(..., envir = .GlobalEnv, collapse = T){
+    dots <- list(...)
+    stopifnot(all(nzchar(names(dots))))
+    args <- commandArgs(T)
+    for(i in seq_along(args))
+        dots[[i]] <- as(args[[i]], class(dots[[i]]))
+    for(nm in names(dots)){
+        assign(nm, dots[[nm]], envir = envir)
+    }
+    out <-
+        if(collapse){
+            paste(lapply(dots, as.character), collapse = "_")
+        } else
+            dots
+    invisible(out)
+}
 
 
 catf <- function(fmt, ...){

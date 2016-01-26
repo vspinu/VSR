@@ -34,7 +34,7 @@ NumericVector c_ema(NumericVector& X, NumericVector& days, double theta){
 
     for(int i = 1; i < N; i++){
       int prev = i - 1;
-      double delta = days[i] - days[prev];
+      double edelta = days[i] - days[prev];
       if( delta < 0) Rf_error("days argument is not increasing");
       double W = exp( - delta/theta);
       out[i] = W*out[prev] + (1.0 - W)*X[i];
@@ -67,6 +67,7 @@ NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double theta){
   return out;
 }
 
+//' @export
 // [[Rcpp::export]]
 NumericVector c_ediversity(IntegerVector& X, int N, double theta){
   ////// NumericVector c_ediversity(IntegerVector& X, int N, NumericVector& days, double theta){
@@ -90,15 +91,15 @@ NumericVector c_ediversity(IntegerVector& X, int N, double theta){
       // this counfounds duration and diversity, so use edelta exp( - alpha ) instead
       // double edelta = exp( -alpha * (days[i] - days[i - 1]) );
       int xi = X[i] - 1;
-      if (xi >= N )
-	Rf_error("X must hold indexes from 1 to %d (N)", N);
+      if (xi < 0 || xi >= N )
+        Rf_error("X must hold indexes from 1 to %d (N)", N);
 
       for (int j = 0; j < N; j++) {
-	if (j != xi) {
-	  // everything else except current object decays
-	  holder[j] = holder[j] * edelta;
-	  sum = sum + holder[j];
-	}
+        if (j != xi) {
+          // everything else except current object decays
+          holder[j] = holder[j] * edelta;
+          sum = sum + holder[j];
+        }
       }
       // current one is reset to 1
       holder[xi] = 1.0;
@@ -108,9 +109,10 @@ NumericVector c_ediversity(IntegerVector& X, int N, double theta){
   return out;
 }
 
+//' @export
 // [[Rcpp::export]]
 IntegerVector c_cum_unique_count(IntegerVector& X, int N){
-  // Count cumulatively number of different countries/id2 etc called so far
+  // Count cumulatively number of different elements in X 
   // N is a total number of distinct elements in X
   // X contains integer numbers in [1, N]
 
@@ -124,14 +126,15 @@ IntegerVector c_cum_unique_count(IntegerVector& X, int N){
 
     for (int i = 1; i < len; i++) {
 
-      if (X[i] > N )
-	Rf_error("X must hold indexes from 1 to %d (accessing %d at i=%d)", N, X[i], i);
+      int xi = X[i] - 1;
+      if (xi < 0 || xi >=  N )
+        Rf_error("X must hold indexes from 1 to %d (accessing %d at i=%d)", N, X[i], i);
       
       if( holder[X[i] - 1] < 1 ){
-  	holder[X[i] - 1] = 1;
-  	out[i] = ++acc;
+        holder[X[i] - 1] = 1;
+        out[i] = ++acc;
       } else {
-  	out[i] = acc;
+        out[i] = acc;
       }
     }
     
