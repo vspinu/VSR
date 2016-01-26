@@ -35,8 +35,8 @@ NumericVector c_ema(NumericVector& X, NumericVector& days, double theta){
     for(int i = 1; i < N; i++){
       int prev = i - 1;
       double edelta = days[i] - days[prev];
-      if( delta < 0) Rf_error("days argument is not increasing");
-      double W = exp( - delta/theta);
+      if( edelta < 0) Rf_error("days argument is not increasing");
+      double W = exp( - edelta/theta);
       out[i] = W*out[prev] + (1.0 - W)*X[i];
     }
     
