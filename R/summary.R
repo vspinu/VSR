@@ -41,6 +41,17 @@ tab <- function(...){
   else out
 }
 
+ftab <- function(obj, topn = NULL){
+    out <- c_tab(obj)
+    if(is.null(topn))
+        out
+    else{
+        topix <- top_index(out[["counts"]], topn)
+        list(vals = out[["vals"]][topix],
+             counts = out[["counts"]][topix])
+    }
+}
+
 ptab <- ptable <- function(..., margin = NULL){
   prop.table(base::table(...), margin)
 }
@@ -52,8 +63,13 @@ qtab <- qtable <- function(..., k = 10){
 
 len <- length
 
-ulen <- ulength <- function(x) length(unique(x))
-usort <- function(x) sort(unique(x))
+ulen <- ulength <- function(x) NROW(unique(x))
+usort <- function(x, mixed = F){
+    if(mixed)
+        gtools::mixedsort(unique(x))
+    else
+        sort(unique(x))
+}
 
 tabna <- function(...){
     dots <- lapply(list(...), is.na)
@@ -97,7 +113,7 @@ which_qrange <- function(var, range, max_levels){
 
 ##' @export
 setGeneric("qrange", 
-           def = function(var, range = c(.05, .95), max_levels = 20){
+           def = function(var, range = c(.05, .95), max_levels = 20, ...){
                if(is.null(range)) return(var)
                if(is.factor(var)){
                    if(length(labels(var)) > max_levels){
@@ -108,13 +124,21 @@ setGeneric("qrange",
            },
            signature = "var")
 
+
+.qrange_matrix <- function(var, range = c(.05, .95), max_levels = 10, kmean_clusters = 1) {
+    if(is.null(range)) return(var)
+    which <- kmeans_outliers(var, range[[1]] + 1 - range[[2]], centers = kmean_clusters)
+    if(is.data.frame(var))
+        droplevels(var[-which, ])
+    else 
+        var[-which, ]
+}
+
 ##' @export
-setMethod("qrange", "data.frame",
-          function(var, range = c(.05, .95), max_levels = 10) {
-              if(is.null(range)) return(var)
-              which <- kmeans_outliers(var, range[[1]] + 1 - range[[2]])
-              droplevels(var[-which, ])
-          })
+setMethod("qrange", "data.frame", .qrange_matrix)
+
+##' @export
+setMethod("qrange", "matrix", .qrange_matrix)
 
 qrange1 <- function(var) qrange(var, c(.01, .99))
 qrange5 <- function(var) qrange(var, c(.05, .95))
@@ -123,23 +147,4 @@ qrange10 <- function(var) qrange(var, c(.1, .9))
 xdiff <- function(A, B){
     list("A-B" = setdiff(A, B),
          "B-A" = setdiff(B, A))
-}
-
-keep_k_levels <- function(f, k = 7, other_label = "OTHER", includeNA = T){
-    if(includeNA)
-        f[is.na(f)] <- "NA"
-    f <- as.factor(f)
-    best <- head(names(tab(f)), k)
-    levs <- levels(f)
-    levs[!levs %in% best] <- other_label
-    levels(f) <- levs
-    f
-}
-
-multiple_matches <- function(dt){
-    dt <- unique(dt)
-    lens <- sapply(dt, ulen)
-    lead_var <- dt[[which.min(lens)]]
-    dups <- lead_var[duplicated(lead_var)]
-    dt[lead_var %in% dups]
 }

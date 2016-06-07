@@ -61,3 +61,13 @@ quantile_knots <- qknots <-
         unique(quantile(x, breaks, na.rm = T))
 }
 
+sparsity <- function(mat){
+    N <- prod(dim(mat))
+    if(is(mat, "Matrix")){
+        Matrix::nnzero(mat, T)/N
+    } else if (is(mat, "simple_triplet_matrix")) {
+        length(mat$v)/N
+    } else {
+        sum(mat > 0)/N
+    }
+}

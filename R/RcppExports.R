@@ -16,11 +16,29 @@ c_ema_lin <- function(X, days, theta) {
     .Call('VSR_c_ema_lin', PACKAGE = 'VSR', X, days, theta)
 }
 
+#' @export
 c_ediversity <- function(X, N, theta) {
     .Call('VSR_c_ediversity', PACKAGE = 'VSR', X, N, theta)
 }
 
+#' @export
 c_cum_unique_count <- function(X, N) {
     .Call('VSR_c_cum_unique_count', PACKAGE = 'VSR', X, N)
+}
+
+c_rdmean_pow <- function(x, w, p) {
+    .Call('VSR_c_rdmean_pow', PACKAGE = 'VSR', x, w, p)
+}
+
+top_index <- function(x, n) {
+    .Call('VSR_top_index', PACKAGE = 'VSR', x, n)
+}
+
+c_fast_paste0 <- function(str1, str2) {
+    .Call('VSR_c_fast_paste0', PACKAGE = 'VSR', str1, str2)
+}
+
+c_tab <- function(x) {
+    .Call('VSR_c_tab', PACKAGE = 'VSR', x)
 }
 

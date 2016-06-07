@@ -1,5 +1,7 @@
 assignCommandArgs <- function(..., envir = .GlobalEnv, collapse = T){
     dots <- list(...)
+    if(any(sapply(dots, is.null)))
+        stop("default arguments cannot be NULL. Need to infer the type.")
     stopifnot(all(nzchar(names(dots))))
     args <- commandArgs(T)
     for(i in seq_along(args))
@@ -15,6 +17,14 @@ assignCommandArgs <- function(..., envir = .GlobalEnv, collapse = T){
     invisible(out)
 }
 
+catlog <- function(...){
+    str <- paste(..., collapse = "", sep = "")
+    if(grepl("^\n", str)){
+        cat("\n")
+        str <- substring(str, 2)
+    }
+    cat(paste(sprintf("[%s] ", Sys.time()), str, "\n", sep = "", collapse = ""))
+}
 
 catf <- function(fmt, ...){
   cat(sprintf(fmt, ...), "\n")
@@ -30,8 +40,7 @@ stopif <- function (...) {
       ch <- deparse(mc[[i + 1]], width.cutoff = 60L)
       if (length(ch) > 1L)
         ch <- paste(ch[1L], "....")
-      stop(sprintf(ngettext(length(r), "%s is not FALSE", "%s are not all FALSE"), ch),
-           call. = FALSE, domain = NA)
+      stop(sprintf("%s is TRUE", ch), call. = FALSE, domain = NA)
     }
   invisible()
 }
@@ -127,32 +136,32 @@ Comp <- function(...){
     }
 }
 
-map <- function(x, fun, ...) sapply(x, fun, ..., simplify = F)
-mapit <- function(x, expr, envir = parent.frame()){
-    expr <- substitute(expr)
-    sapply(x, function(it) eval(expr, envir = list(it = it), enclos = envir), simplify = F)
-}
+## map <- function(x, fun, ...) sapply(x, fun, ..., simplify = F)
+## mapit <- function(x, expr, envir = parent.frame()){
+##     expr <- substitute(expr)
+##     sapply(x, function(it) eval(expr, envir = list(it = it), enclos = envir), simplify = F)
+## }
 
-smap <- function(x, fun, ...) sapply(x, fun, ..., simplify = T)
-smapit <- function(x, expr, envir = parent.frame()){
-    expr <- substitute(expr)
-    sapply(x, function(it) eval(expr, envir = list(it = it), enclos = envir), simplify = T)
-}
+## smap <- function(x, fun, ...) sapply(x, fun, ..., simplify = T)
+## smapit <- function(x, expr, envir = parent.frame()){
+##     expr <- substitute(expr)
+##     sapply(x, function(it) eval(expr, envir = list(it = it), enclos = envir), simplify = T)
+## }
 
-mapcbind <- function(x, fun, ...) do.call(cbind, sapply(x, fun, ..., simplify = F))
-mapitcbind <- function(x, expr){
-    expr <- substitute(expr)
-    do.call(cbind, sapply(x, function(it) eval(expr), simplify = F))
-}
+## mapcbind <- function(x, fun, ...) do.call(cbind, sapply(x, fun, ..., simplify = F))
+## mapitcbind <- function(x, expr){
+##     expr <- substitute(expr)
+##     do.call(cbind, sapply(x, function(it) eval(expr), simplify = F))
+## }
 
-maprbind <- function(x, fun, ...) do.call(rbind, sapply(x, fun, ..., simplify = F))
-mapitrbind <- function(x, expr){
-    expr <- substitute(expr)
-    do.call(rbind, sapply(x, function(it) eval(expr), simplify = F))
-}
+## maprbind <- function(x, fun, ...) do.call(rbind, sapply(x, fun, ..., simplify = F))
+## mapitrbind <- function(x, expr){
+##     expr <- substitute(expr)
+##     do.call(rbind, sapply(x, function(it) eval(expr), simplify = F))
+## }
 
-mapdt <- function(x, fun, ...)
-    rbindlist(sapply(x, function(x) fun(x), ..., simplify = F), use.names = T, fill = T)
+## mapdt <- function(x, fun, ...)
+##     rbindlist(sapply(x, function(x) fun(x), ..., simplify = F), use.names = T, fill = T)
 
 rdtit <- function(x, expr, envir = parent.frame()){
     expr <- substitute(expr)
@@ -289,3 +298,102 @@ hfilter <- function(hlist, ..., keep_names = c(), check_all_levels = T){
 ## hfilter(tt, c("c", "a"))
 
 
+
+
+
+keep_k_levels <- function(f, k = 7, other_label = "OTHER", includeNA = T){
+    if(includeNA)
+        f[is.na(f)] <- "NA"
+    f <- as.factor(f)
+    best <- head(names(tab(f)), k)
+    levs <- levels(f)
+    levs[!levs %in% best] <- other_label
+    levels(f) <- levs
+    f
+}
+
+balance_factor <- function(f, nlev = NULL, min_in_lev = NULL) {
+    if (!is.null(nlev)){
+        if (!is.null(min_in_lev)) {
+            warning("`nlev` provided, ignoring `min_in_lev`")
+        }
+    } else if (!is.null(min_in_lev)){
+        nlev <- floor(length(f)/min_in_lev)
+    } else {
+        stop("at least one of nlev and min_in_lev must be specified")
+    }
+    out <- as.factor(f)
+    tbl <- rev(tab(f))
+    sums <- cumsum(tbl)
+    part <- cut_interval(sums, nlev)
+    df <- DT(orig_levs = names(tbl), part = part)
+    df[, new_levs := paste(usort(orig_levs), collapse = "|"), by = part]
+    levels(out) <- df[, new_levs[match(levels(out), orig_levs)]]
+    out
+
+}
+
+multiple_matches <- function(dt){
+    dt <- unique(dt)
+    lens <- sapply(dt, ulen)
+    lead_var <- dt[[which.min(lens)]]
+    dups <- lead_var[duplicated(lead_var)]
+    dt[lead_var %in% dups]
+}
+
+setsimdiff <- function(A, B){
+    list(`A-B` = setdiff(A, B),
+         `B-A` = setdiff(B, A))
+}
+
+
+dt_cols <- function(regexp){
+    ## fixme: be more sophisticated in lookup
+    pf <- parent.frame(3)
+    .SD <- get("x", envir = pf)
+    .SD[, grep(regexp, names(.SD)), with = F]
+}
+
+
+impute_missing_by_group <- function(dt, by = NULL, vars = NULL, fun = NULL, info = T){
+    if(is.null(fun))
+        fun <- function(x) mean(x, na.rm = T)
+    if(is.null(vars)){
+        vars <- names(dt)[sapply(dt, is.double)]
+    }
+    if (info)
+        catlog("imputing on variables ", paste(vars, collapse = ", "))
+    if(is.list(by)) {
+        for(.by in by){
+            catlog("Imputing by ", paste(.by, collapse = ", "))
+            impute_missing_by_group(dt, by = .by, vars = vars, fun = fun, info = F);gc()
+        }
+        dt
+    } else {
+        if(!all(vars %in% names(dt)))
+            stop(sprintf("vars %s are not in dt", paste(setdiff(vars, names(dt)), sep = ", ")))
+        dt[, (vars) := {
+            vars %>% set_names %>% 
+                map(function(nm){
+                    x <- .SD[[nm]]
+                    if(is.numeric(x)){
+                        nas <- is.na(x)
+                        x[nas] <- mean(x, na.rm = T)
+                    } 
+                    x
+                })
+        }, .SDcols = vars, by = by]
+        dt
+    }
+}
+
+fast_paste0 <- function(str1, str2){
+    if((length(str1) != length(str2)) && !(length(str1) == 1 || length(str2) == 1)){
+        if(length(str1) > length(str2)){
+            str2 <- rep_len(str2, length(str1))
+        } else {
+            str1 <- rep_len(str1, length(str1))
+        }
+    }
+    c_fast_paste0(str1, str2)
+}

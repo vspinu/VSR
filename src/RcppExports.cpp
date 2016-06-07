@@ -9,83 +9,111 @@ using namespace Rcpp;
 NumericVector c_cumema(NumericVector& X, NumericVector& days, double theta);
 RcppExport SEXP VSR_c_cumema(SEXP XSEXP, SEXP daysSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP );
-        Rcpp::traits::input_parameter< NumericVector& >::type days(daysSEXP );
-        Rcpp::traits::input_parameter< double >::type theta(thetaSEXP );
-        NumericVector __result = c_cumema(X, days, theta);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type days(daysSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    __result = Rcpp::wrap(c_cumema(X, days, theta));
+    return __result;
 END_RCPP
 }
 // c_ema
 NumericVector c_ema(NumericVector& X, NumericVector& days, double theta);
 RcppExport SEXP VSR_c_ema(SEXP XSEXP, SEXP daysSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP );
-        Rcpp::traits::input_parameter< NumericVector& >::type days(daysSEXP );
-        Rcpp::traits::input_parameter< double >::type theta(thetaSEXP );
-        NumericVector __result = c_ema(X, days, theta);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type days(daysSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    __result = Rcpp::wrap(c_ema(X, days, theta));
+    return __result;
 END_RCPP
 }
 // c_ema_lin
 NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double theta);
 RcppExport SEXP VSR_c_ema_lin(SEXP XSEXP, SEXP daysSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP );
-        Rcpp::traits::input_parameter< NumericVector& >::type days(daysSEXP );
-        Rcpp::traits::input_parameter< double >::type theta(thetaSEXP );
-        NumericVector __result = c_ema_lin(X, days, theta);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type days(daysSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    __result = Rcpp::wrap(c_ema_lin(X, days, theta));
+    return __result;
 END_RCPP
 }
 // c_ediversity
 NumericVector c_ediversity(IntegerVector& X, int N, double theta);
 RcppExport SEXP VSR_c_ediversity(SEXP XSEXP, SEXP NSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< IntegerVector& >::type X(XSEXP );
-        Rcpp::traits::input_parameter< int >::type N(NSEXP );
-        Rcpp::traits::input_parameter< double >::type theta(thetaSEXP );
-        NumericVector __result = c_ediversity(X, N, theta);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    __result = Rcpp::wrap(c_ediversity(X, N, theta));
+    return __result;
 END_RCPP
 }
 // c_cum_unique_count
 IntegerVector c_cum_unique_count(IntegerVector& X, int N);
 RcppExport SEXP VSR_c_cum_unique_count(SEXP XSEXP, SEXP NSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< IntegerVector& >::type X(XSEXP );
-        Rcpp::traits::input_parameter< int >::type N(NSEXP );
-        IntegerVector __result = c_cum_unique_count(X, N);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    __result = Rcpp::wrap(c_cum_unique_count(X, N));
+    return __result;
+END_RCPP
+}
+// c_rdmean_pow
+NumericVector c_rdmean_pow(NumericVector x, NumericVector w, NumericVector p);
+RcppExport SEXP VSR_c_rdmean_pow(SEXP xSEXP, SEXP wSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
+    __result = Rcpp::wrap(c_rdmean_pow(x, w, p));
+    return __result;
+END_RCPP
+}
+// top_index
+IntegerVector top_index(SEXP x, int n);
+RcppExport SEXP VSR_top_index(SEXP xSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    __result = Rcpp::wrap(top_index(x, n));
+    return __result;
+END_RCPP
+}
+// c_fast_paste0
+std::vector< std::string > c_fast_paste0(std::vector<std::string>& str1, std::vector<std::string>& str2);
+RcppExport SEXP VSR_c_fast_paste0(SEXP str1SEXP, SEXP str2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type str1(str1SEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type str2(str2SEXP);
+    __result = Rcpp::wrap(c_fast_paste0(str1, str2));
+    return __result;
+END_RCPP
+}
+// c_tab
+List c_tab(SEXP x);
+RcppExport SEXP VSR_c_tab(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    __result = Rcpp::wrap(c_tab(x));
+    return __result;
 END_RCPP
 }
