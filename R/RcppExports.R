@@ -30,8 +30,13 @@ c_rdmean_pow <- function(x, w, p) {
     .Call('VSR_c_rdmean_pow', PACKAGE = 'VSR', x, w, p)
 }
 
-top_index <- function(x, n) {
-    .Call('VSR_top_index', PACKAGE = 'VSR', x, n)
+#' @export
+c_apk1 <- function(k, actual, predicted) {
+    .Call('VSR_c_apk1', PACKAGE = 'VSR', k, actual, predicted)
+}
+
+top_index <- function(x, n, ascending = FALSE) {
+    .Call('VSR_top_index', PACKAGE = 'VSR', x, n, ascending)
 }
 
 c_fast_paste0 <- function(str1, str2) {

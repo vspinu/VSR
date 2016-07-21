@@ -44,9 +44,11 @@ tab <- function(...){
 ftab <- function(obj, topn = NULL){
     out <- c_tab(obj)
     if(is.null(topn))
+        ## fixme: this case dosn't re-order
         out
-    else{
-        topix <- top_index(out[["counts"]], topn)
+    else {
+        ## fixme: implement head/tail option?
+        topix <- top_index(out[["counts"]], topn, F)
         list(vals = out[["vals"]][topix],
              counts = out[["counts"]][topix])
     }

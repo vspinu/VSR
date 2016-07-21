@@ -1,7 +1,6 @@
 #include "all.hpp"
 #include <queue>
 
-
 using namespace Rcpp ;
 
 template <int RTYPE>
@@ -75,8 +74,8 @@ private:
 } ;
 
 
-template <int RTYPE, typename RETTYPE>
-RETTYPE top_index(Vector<RTYPE> v, int n){
+template <int RTYPE>
+IntegerVector top_index(Vector<RTYPE> v, int n, bool ascending){
   int size = v.size() ;
     
   // not interesting case. Less data than n
@@ -86,17 +85,23 @@ RETTYPE top_index(Vector<RTYPE> v, int n){
     
   IndexQueue<RTYPE> q( v )  ;
   for( int i=0; i<n; i++) q.push(i) ;
-  for( int i=n; i<size; i++) q.input(i) ;   
-  return q ;
+  for( int i=n; i<size; i++) q.input(i);
+
+  if (ascending){
+    return q;
+  } else {
+    IntegerVector out = IntegerVector(q);
+    std::reverse(out.begin(), out.end());
+    return out;
+  }
 }
 
 // [[Rcpp::export]]
-IntegerVector top_index( SEXP x, int n){
+IntegerVector top_index(SEXP x, int n, bool ascending = false){
   switch( TYPEOF(x) ){
-  case INTSXP: return top_index<INTSXP, IntegerVector>( x, n ) ;
-  case REALSXP: return top_index<REALSXP, IntegerVector>( x, n ) ;
-  case STRSXP: return top_index<STRSXP, IntegerVector>( x, n ) ;
+  case INTSXP: return top_index<INTSXP>(x, n, ascending) ;
+  case REALSXP: return top_index<REALSXP>(x, n, ascending) ;
+  case STRSXP: return top_index<STRSXP>(x, n, ascending) ;
   default: stop("type not handled") ; 
   }
-  return IntegerVector() ; // not used
 }

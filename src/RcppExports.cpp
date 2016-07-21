@@ -82,15 +82,29 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// c_apk1
+double c_apk1(const int k, const int actual, const IntegerVector& predicted);
+RcppExport SEXP VSR_c_apk1(SEXP kSEXP, SEXP actualSEXP, SEXP predictedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const int >::type actual(actualSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type predicted(predictedSEXP);
+    __result = Rcpp::wrap(c_apk1(k, actual, predicted));
+    return __result;
+END_RCPP
+}
 // top_index
-IntegerVector top_index(SEXP x, int n);
-RcppExport SEXP VSR_top_index(SEXP xSEXP, SEXP nSEXP) {
+IntegerVector top_index(SEXP x, int n, bool ascending);
+RcppExport SEXP VSR_top_index(SEXP xSEXP, SEXP nSEXP, SEXP ascendingSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    __result = Rcpp::wrap(top_index(x, n));
+    Rcpp::traits::input_parameter< bool >::type ascending(ascendingSEXP);
+    __result = Rcpp::wrap(top_index(x, n, ascending));
     return __result;
 END_RCPP
 }

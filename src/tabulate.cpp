@@ -10,14 +10,18 @@ List tabulate(const Vector<RTYPE>& v)
   std::map<ET, size_t> counts;
 
   for (auto it = v.begin(); it != v.end(); it++){
-    auto found = counts.find(*it);
-    if (found != counts.end()){
-      found->second++;
-    } else {
-      counts[*it] = 1;
+    // .find doesn't play nicely with double NAs, so just ignore for now. This
+    // NA check is fucked, but there seem no other way around
+    if(!ISNA(*it) && *it != NA_INTEGER){
+      auto found = counts.find(*it);
+      if (found != counts.end()){
+        found->second++;
+      } else {
+        counts[*it] = 1;
+      }
     }
   }
-
+  
   Vector<RTYPE> keys(counts.size());
   IntegerVector vals(counts.size());
 

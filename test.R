@@ -6,12 +6,11 @@ identical(res_cpp, res_r)
 
 top_index(letters, 5)
 
-x <- rnorm(1e5)
-microbenchmark( 
-    R_order = tail(order(x), 100),
-    cpp2    = top_index( x, 100 )
-)
+x <- rnorm(100)
 
+microbenchmark( 
+    tab = head(tab(x), 5),
+    ftab  = ftab(x, 5))
 
 
 tt <- floor(runif(1e5, 0, 100))
@@ -21,5 +20,11 @@ microbenchmark(r = table(tt), c = c_tab(tt))
 
 all(table(tt) == c_tab(tt)$counts)
 
-ftab(tt[1:2], 5)
-ftab(c(1, 2, 3, 4, 5, 3, 4, 5, 4, 5, 5), 3)
+ftab(tt, 5)
+ftab(c(1, 2, 3, 4, 5, 3, 4, 5, 4, 5, 5, NA, NA, NA), 2)
+
+
+apk(5, 1, 1:3) == c_apk1(5, 1, 1:3)
+apk(5, 2, 1:3) == c_apk1(5, 2, 1:3)
+apk(5, 3, 1:3) == c_apk1(5, 3, 1:3)
+apk(5, 3, rev(1:3)) == c_apk1(5, 3, rev(1:3))

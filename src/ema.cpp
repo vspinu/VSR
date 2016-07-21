@@ -6,6 +6,10 @@ using std::vector;
 //' @export
 // [[Rcpp::export]]
 NumericVector c_cumema(NumericVector& X, NumericVector& days, double theta){
+  if (theta == 0) {
+    return X;
+  }
+
   int N = X.length();
   NumericVector out(N);
 
@@ -16,7 +20,7 @@ NumericVector c_cumema(NumericVector& X, NumericVector& days, double theta){
       int prev = i - 1;
       double delta = days[i] - days[prev];
       if( delta < 0) Rf_error("days argument is not increasing");
-      double W = exp( - delta/theta);
+      double W = exp(-delta/theta);
       out[i] = W*out[prev] + X[i];
     }
   }
@@ -26,20 +30,22 @@ NumericVector c_cumema(NumericVector& X, NumericVector& days, double theta){
 //' @export
 // [[Rcpp::export]]
 NumericVector c_ema(NumericVector& X, NumericVector& days, double theta){
+  if (theta == 0) {
+    return X;
+  }
+
   int N = X.length();
   NumericVector out(N);
 
   if (N > 0) {
     out[0] = X[0];
-
-    for(int i = 1; i < N; i++){
+    for (int i = 1; i < N; i++) {
       int prev = i - 1;
       double edelta = days[i] - days[prev];
-      if( edelta < 0) Rf_error("days argument is not increasing");
-      double W = exp( - edelta/theta);
+      if (edelta < 0) Rf_error("days argument is not increasing");
+      double W = exp(-edelta/theta);
       out[i] = W*out[prev] + (1.0 - W)*X[i];
     }
-    
   }
   return out;
 }
@@ -49,6 +55,11 @@ NumericVector c_ema(NumericVector& X, NumericVector& days, double theta){
 NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double theta){
   // linear interpolation
   // 3.3 in VSR/docs/ts_alg.pdf and  http://oroboro.com/irregular-ema/
+
+  if (theta == 0) {
+    return X;
+  }
+
   int N = X.length();
   NumericVector out(N);
 
