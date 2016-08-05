@@ -5,8 +5,8 @@ using std::vector;
 
 //' @export
 // [[Rcpp::export]]
-NumericVector c_cumema(NumericVector& X, NumericVector& days, double theta){
-  if (theta == 0) {
+NumericVector c_cumema(NumericVector& X, NumericVector& days, double n){
+  if (n == 0) {
     return X;
   }
 
@@ -20,7 +20,7 @@ NumericVector c_cumema(NumericVector& X, NumericVector& days, double theta){
       int prev = i - 1;
       double delta = days[i] - days[prev];
       if( delta < 0) Rf_error("days argument is not increasing");
-      double W = exp(-delta/theta);
+      double W = exp(-delta/n);
       out[i] = W*out[prev] + X[i];
     }
   }
@@ -29,8 +29,8 @@ NumericVector c_cumema(NumericVector& X, NumericVector& days, double theta){
 
 //' @export
 // [[Rcpp::export]]
-NumericVector c_ema(NumericVector& X, NumericVector& days, double theta){
-  if (theta == 0) {
+NumericVector c_ema(NumericVector& X, NumericVector& days, double n){
+  if (n == 0) {
     return X;
   }
 
@@ -43,7 +43,7 @@ NumericVector c_ema(NumericVector& X, NumericVector& days, double theta){
       int prev = i - 1;
       double edelta = days[i] - days[prev];
       if (edelta < 0) Rf_error("days argument is not increasing");
-      double W = exp(-edelta/theta);
+      double W = exp(-edelta/n);
       out[i] = W*out[prev] + (1.0 - W)*X[i];
     }
   }
@@ -52,11 +52,11 @@ NumericVector c_ema(NumericVector& X, NumericVector& days, double theta){
 
 //' @export
 // [[Rcpp::export]]
-NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double theta){
+NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double n){
   // linear interpolation
   // 3.3 in VSR/docs/ts_alg.pdf and  http://oroboro.com/irregular-ema/
 
-  if (theta == 0) {
+  if (n == 0) {
     return X;
   }
 
@@ -68,7 +68,7 @@ NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double theta){
 
     for(int i = 1; i < N; i++){
       int prev = i - 1;
-      double a = (days[i] - days[prev])/theta;
+      double a = (days[i] - days[prev])/n;
       double W = exp( -a );
       double V = ( 1 - W ) / a;
       out[i] = ( W * out[prev] ) + (( V - W ) * X[prev] ) + (( 1.0 - V ) * X[i] );
@@ -80,8 +80,8 @@ NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double theta){
 
 //' @export
 // [[Rcpp::export]]
-NumericVector c_ediversity(IntegerVector& X, int N, double theta){
-  ////// NumericVector c_ediversity(IntegerVector& X, int N, NumericVector& days, double theta){
+NumericVector c_ediversity(IntegerVector& X, int N, double n){
+  ////// NumericVector c_ediversity(IntegerVector& X, int N, NumericVector& days, double n){
   // X: ints from 1 to N inclusively
   // days: increasing vector of timestamps (in days)
   vector<double> holder(N, 0); // use 1 indexed version
@@ -91,7 +91,7 @@ NumericVector c_ediversity(IntegerVector& X, int N, double theta){
   // if (len != days.length())
   //   Rf_error("length of 'X' and 'days' must aggree");
 
-  double edelta = exp( - 1/theta );
+  double edelta = exp( - 1/n);
   
   if (len > 0 && N > 0) {
     holder[X[0] - 1] = 1.0;

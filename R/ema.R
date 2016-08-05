@@ -1,25 +1,23 @@
 
 cumemaR <- function(x, date, n){
-    theta <- 1/n
     N <- length(x)
     ex <- double(N)
     ex[[1]] <- x[[1]]
     for(i in seq_len(max(0, N-1L))){
         i1 <- i + 1L
-        edelta <- exp(- (date[[i1]] - date[[i]])/theta)
+        edelta <- exp(- (date[[i1]] - date[[i]])/n)
         ex[[i1]] <- ex[[i]]*edelta + x[[i1]]
     }
     ex
 }
 
 emaR <- function(x, date, n){
-    theta <- 1/n
     N <- length(x)
     ex <- double(N)
     ex[[1]] <- x[[1]]
     for(i in seq_len(max(0, N-1L))){
         i1 <- i + 1L
-        W <- exp(-(date[[i1]] - date[[i]])/theta)
+        W <- exp(-(date[[i1]] - date[[i]])/n)
         ex[[i1]] <- W*ex[[i]] + (1-W)*x[[i1]]
     }
     ex
@@ -37,12 +35,11 @@ emaR <- function(x, date, n){
 ##' @param linear boolean, linear or not
 ##' @param cum boolean, cumulative or not
 ema <- function(x, date, n = 10, linear = F, cum = F){
-    theta <- 1/n
     f <-
         if(cum) c_cumema
         else if (linear) c_ema_lin
         else c_ema
-    f(x, date, theta)
+    f(x, date, n)
 }
 
 ##' @rdname ema
