@@ -298,9 +298,6 @@ hfilter <- function(hlist, ..., keep_names = c(), check_all_levels = T){
 ## hfilter(tt, c("c", "a"))
 
 
-
-
-
 keep_k_levels <- function(f, k = 7, other_label = "OTHER", includeNA = T){
     if(includeNA)
         f[is.na(f)] <- "NA"
