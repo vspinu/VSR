@@ -23,8 +23,8 @@ emaR <- function(x, date, n){
     ex
 }
 
-##' Exponential (weighted) moving averages for iregular time series and
-##' derivatives.
+##' Exponential (weighted) moving averages and derivatives for iregular time
+##' series.
 ##' 
 ##' @param x values of the seires
 ##' @param date time index
@@ -64,10 +64,43 @@ macd <- function(x, date, nfast = 12, nslow = 26, linear = F, cum = F){
     out
 }
 
+##' @rdname efilter
 ## exponential moving standard deviation
 emsd <- function(x, date, n = 10, normalize = T, linear = F){
     emean <- ema(x, date, n, linear, F)
     dev <- (x - emean)^2L
     if (normalize) dev <- dev/(emean^2 + 0.0001)
     sqrt(ema(dev, date, n, linear, F))
+}
+
+##' \code{xxx2} functions are two sided version (aka filters).
+##' @rdname ema
+ema2 <- function(x, date, n = 10, linear = F, cum = F){
+    f <-
+        if(cum) c_cumema
+        else if (linear) c_ema_lin
+        else c_ema
+    forw <- f(x, date, n)
+    back <- f(rev(x), -rev(date), n)
+    (forw + rev(back))/2
+}
+
+##' @rdname ema
+wema2 <- function(x, weight, date, n = 10, linear = F, cum = F){
+    num <- ema2(x*weight, date, n, linear, cum)
+    den <- ema2(weight, date, n, linear, cum)
+    out <- num/den
+    ## avoid infinitity for num==0
+    out[num == 0] <- 0
+    out
+}
+
+
+##' @rdname ema
+macd2 <- function(x, date, nfast = 12, nslow = 26, linear = F, cum = F){
+    fast <- ema2(x, date, nfast, linear, cum)
+    slow <- ema2(x, date, nslow, linear, cum)
+    out <- fast/slow - 1
+    out[is.nan(out)] <- 0
+    out
 }
