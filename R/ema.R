@@ -64,8 +64,8 @@ macd <- function(x, date, nfast = 12, nslow = 26, linear = F, cum = F){
     out
 }
 
-##' @rdname efilter
-## exponential moving standard deviation
+##' @rdname ema
+## emsd: Exponential moving standard deviation.
 emsd <- function(x, date, n = 10, normalize = T, linear = F){
     emean <- ema(x, date, n, linear, F)
     dev <- (x - emean)^2L

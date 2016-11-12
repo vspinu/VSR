@@ -3,12 +3,13 @@ Title: Personal Utilities
 Version: 0.0.0.9000
 Authors@R: person("Vitalie", "Spinu", email="spinuvit@gmail.com", role = c("aut", "cre"))
 Description: Personal Utilities
-Depends: R (>= 3.1.1)
-Imports: 
+Depends:
+    R (>= 3.1.1)
+Imports:
     Rcpp,
     lubridate,
     data.table
-Suggests: 
+Suggests:
     plyr,
     dplyr,
     ggplo2,
@@ -16,3 +17,4 @@ Suggests:
 License: GPL
 LazyData: true
 LinkingTo: Rcpp
+RoxygenNote: 5.0.1
