@@ -95,30 +95,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// c_max_ob_margin
-NumericVector c_max_ob_margin(NumericVector& X, NumericVector& V);
-RcppExport SEXP VSR_c_max_ob_margin(SEXP XSEXP, SEXP VSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type V(VSEXP);
-    rcpp_result_gen = Rcpp::wrap(c_max_ob_margin(X, V));
-    return rcpp_result_gen;
-END_RCPP
-}
-// c_min_ob_margin
-NumericVector c_min_ob_margin(NumericVector& X, NumericVector& V);
-RcppExport SEXP VSR_c_min_ob_margin(SEXP XSEXP, SEXP VSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type V(VSEXP);
-    rcpp_result_gen = Rcpp::wrap(c_min_ob_margin(X, V));
-    return rcpp_result_gen;
-END_RCPP
-}
 // c_ob_margin
 List c_ob_margin(NumericVector& X, NumericVector& V, IntegerVector& side);
 RcppExport SEXP VSR_c_ob_margin(SEXP XSEXP, SEXP VSEXP, SEXP sideSEXP) {
@@ -129,6 +105,21 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector& >::type V(VSEXP);
     Rcpp::traits::input_parameter< IntegerVector& >::type side(sideSEXP);
     rcpp_result_gen = Rcpp::wrap(c_ob_margin(X, V, side));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_ob_exp_sum
+List c_ob_exp_sum(NumericVector& price, NumericVector& size, IntegerVector& side, NumericVector& focals, NumericVector& ns);
+RcppExport SEXP VSR_c_ob_exp_sum(SEXP priceSEXP, SEXP sizeSEXP, SEXP sideSEXP, SEXP focalsSEXP, SEXP nsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type price(priceSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< IntegerVector& >::type side(sideSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type focals(focalsSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type ns(nsSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_ob_exp_sum(price, size, side, focals, ns));
     return rcpp_result_gen;
 END_RCPP
 }

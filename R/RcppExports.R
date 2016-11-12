@@ -36,18 +36,13 @@ c_apk1 <- function(k, actual, predicted) {
 }
 
 #' @export
-c_max_ob_margin <- function(X, V) {
-    .Call('VSR_c_max_ob_margin', PACKAGE = 'VSR', X, V)
-}
-
-#' @export
-c_min_ob_margin <- function(X, V) {
-    .Call('VSR_c_min_ob_margin', PACKAGE = 'VSR', X, V)
-}
-
-#' @export
 c_ob_margin <- function(X, V, side) {
     .Call('VSR_c_ob_margin', PACKAGE = 'VSR', X, V, side)
+}
+
+#' @export
+c_ob_exp_sum <- function(price, size, side, focals, ns) {
+    .Call('VSR_c_ob_exp_sum', PACKAGE = 'VSR', price, size, side, focals, ns)
 }
 
 top_index <- function(x, n, ascending = FALSE) {

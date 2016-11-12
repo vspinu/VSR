@@ -5,52 +5,97 @@ using std::vector;
 
 #define NEGINF -std::numeric_limits<double>::infinity()
 #define POSINF std::numeric_limits<double>::infinity()
+// #define NA_DBL std::numeric_limits<double>::quiet_NaN()
 
 // [[Rcpp::plugins("cpp11")]]
 
-template <typename Compare>
-NumericVector ob_margin(NumericVector& X, NumericVector& V){
-  if (X.length() != V.length()){
-    Rf_error("Input vectors 'X' and 'V' must be of the same length.");
-  }
+// template <typename Compare>
+// NumericVector ob_margin(NumericVector& X, NumericVector& V){
+//   if (X.length() != V.length()){
+//     Rf_error("Input vectors 'X' and 'V' must be of the same length.");
+//   }
 
-  size_t N = X.length();
-  NumericVector out(N);
+//   size_t N = X.length();
+//   NumericVector out(N);
 
-  std::map <double, bool, Compare> ob;
+//   std::map <double, bool, Compare> ob;
 
-  for (size_t i = 0; i < N; i++) {
-    if (V[i] == 0.0) {
-      ob.erase(X[i]);
+//   for (size_t i = 0; i < N; i++) {
+//     if (V[i] == 0.0) {
+//       ob.erase(X[i]);
+//     } else {
+//       ob[X[i]] = 1;
+//     }
+//     // will fail on empty map
+//     out[i] = ob.cbegin()->first;
+//   }
+
+//   // for (auto it = ob.begin(); it != ob.end(); ++it)
+//   //   std::cout << it->first << " => " << it->second << '\n';
+
+//   return out;
+// }
+
+
+// //' @export
+// // [[Rcpp::export]]
+// NumericVector c_max_ob_margin(NumericVector& X, NumericVector& V){
+//   return ob_margin<std::greater<double>> (X, V);
+// }
+
+// //' @export
+// // [[Rcpp::export]]
+// NumericVector c_min_ob_margin(NumericVector& X, NumericVector& V){
+//   return ob_margin<std::less<double>> (X, V);
+// }
+
+void update_obs(double X, double V, double side,
+                std::map <double, double, std::less<double>> &ask_ob, 
+                std::map <double, double, std::greater<double>> &bid_ob){
+
+  if (side == 1){
+
+    // BID SIDE
+    if (V == 0.0) {
+      bid_ob.erase(X);
     } else {
-      ob[X[i]] = 1;
+      bid_ob[X] = V;
     }
-    // will fail on empty map
-    out[i] = ob.cbegin()->first;
-  }
 
-  // for (auto it = ob.begin(); it != ob.end(); ++it)
-  //   std::cout << it->first << " => " << it->second << '\n';
+    auto ask_it = ask_ob.cbegin();
+    double max_bid = bid_ob.empty() ? NEGINF : bid_ob.cbegin()->first;
 
-  return out;
-}
+    // erase erroneous leftovers on aks side
+    while (ask_it != ask_ob.end() && max_bid > ask_it->first){
+      ask_it++;
+    }
+    ask_ob.erase(ask_ob.cbegin(), ask_it);
+      
+  } else if (side == 2) {
 
+    // ASK SIDE
+    if (V == 0.0) {
+      ask_ob.erase(X);
+    } else {
+      ask_ob[X] = V;
+    }
 
-//' @export
-// [[Rcpp::export]]
-NumericVector c_max_ob_margin(NumericVector& X, NumericVector& V){
-  return ob_margin<std::greater<double>> (X, V);
-}
+    auto bid_it = bid_ob.cbegin();
+    double min_ask = ask_ob.empty() ? POSINF : ask_ob.cbegin()->first;
 
-//' @export
-// [[Rcpp::export]]
-NumericVector c_min_ob_margin(NumericVector& X, NumericVector& V){
-  return ob_margin<std::less<double>> (X, V);
+    // erase erroneous leftovers on bids side
+    while (bid_it != bid_ob.end() && bid_it->first > min_ask){
+      bid_it++;
+    }
+    bid_ob.erase(bid_ob.cbegin(), bid_it);
+    
+  } else Rf_error("Invalid side %f", side);
 }
 
 //' @export
 // [[Rcpp::export]]
 List c_ob_margin(NumericVector& X, NumericVector& V, IntegerVector& side){
+
   // If for whatever reason values in OB are not removed (through 0.0 marker)
   // forcefully remove these values by means of opposite OB side.
   if (X.length() != V.length() && X.length() != side.length()){
@@ -60,77 +105,15 @@ List c_ob_margin(NumericVector& X, NumericVector& V, IntegerVector& side){
   size_t N = X.length();
   NumericVector bids(N), asks(N);
 
-  std::map <double, bool, std::less<double>> ask_ob;
-  std::map <double, bool, std::greater<double>> bid_ob;
-  double
-    max_bid = NEGINF, 
-    min_ask = POSINF;
-
+  std::map <double, double, std::less<double>> ask_ob;
+  std::map <double, double, std::greater<double>> bid_ob;
+  
   for (size_t i = 0; i < N; i++) {
-    
-    if (side[i] == 1){
 
-      // BID SIDE
-      if (V[i] == 0.0) {
-        bid_ob.erase(X[i]);
-      } else {
-        bid_ob[X[i]] = 1;
-      }
-      auto bid_it = bid_ob.cbegin();
+    update_obs(X[i], V[i], side[i], ask_ob, bid_ob);
 
-      if(bid_ob.empty())
-        {
-          max_bid = NEGINF;
-        }
-      else
-        {
-          max_bid = bid_it->first;
-          if (max_bid > min_ask) {
-            auto ask_it = ask_ob.cbegin();
-            while (ask_it != ask_ob.end() && max_bid > ask_it->first){
-              ask_it++;
-            }
-            ask_ob.erase(ask_ob.cbegin(), ask_it);
-            if(ask_ob.empty())
-              min_ask = max_bid;
-            else
-              min_ask = ask_it->first;
-          }
-        }
-      
-    } else if (side[i] == 2) {
-
-      // ASK SIDE
-      if (V[i] == 0.0) {
-        ask_ob.erase(X[i]);
-      } else {
-        ask_ob[X[i]] = 1;
-      }
-      auto ask_it = ask_ob.cbegin();
-
-      if (ask_ob.empty())
-        {
-          min_ask = POSINF;
-        }
-      else
-        {
-          min_ask = ask_it->first;
-          if(max_bid > min_ask){
-            auto bid_it = bid_ob.cbegin();
-            while (bid_it != bid_ob.end() && bid_it->first > min_ask){
-              bid_it++;
-            }
-            bid_ob.erase(bid_ob.cbegin(), bid_it);
-            if(bid_ob.empty())
-              max_bid = min_ask;
-            else 
-              max_bid = bid_it->first;
-          }
-        }
-    } else Rf_error("Invalid side at index %d", i + 1);
-
-    asks[i] = std::isinf(min_ask) ? NA_REAL : min_ask;
-    bids[i] = std::isinf(max_bid) ? NA_REAL : max_bid;
+    asks[i] = ask_ob.empty() ? NA_REAL : ask_ob.cbegin()->first;
+    bids[i] = bid_ob.empty() ? NA_REAL : bid_ob.cbegin()->first;
   }
 
   List out;
@@ -139,84 +122,70 @@ List c_ob_margin(NumericVector& X, NumericVector& V, IntegerVector& side){
   return out;
 }
 
-void upate_obs(double X, double V, double side,
-               std::map <double, double, std::less<double>> &ask_ob, 
-               std::map <double, double, std::greater<double>> &bid_ob){
-
-  auto bid_it = bid_ob.cbegin();
-  auto ask_it = bid_ob.cbegin();
-
-  double
-    max_bid = bid_ob.empty() ? NEGINF : bid_it->first,
-    min_ask = ask_ob.empty() ? POSINF : ask_it->first;
-  
-  if (side == 1){
-
-    // BID SIDE
-    if (V == 0.0) {
-      bid_ob.erase(X[i]);
-    } else {
-      bid_ob[X] = V;
-    }
-
-    if (max_bid > min_ask) {
-      // erase erroneous leftovers on aks side
-      while (ask_it != ask_ob.end() && max_bid > ask_it->first){
-        ask_it++;
-      }
-      ask_ob.erase(ask_ob.cbegin(), ask_it);
-    }
-      
-  } else if (side[i] == 2) {
-
-    // ASK SIDE
-    if (V == 0.0) {
-      ask_ob.erase(X);
-    } else {
-      ask_ob[X] = V;
-    }
-
-    if(max_bid > min_ask){
-      // erase erroneous leftovers on bids side
-      while (bid_it != bid_ob.end() && bid_it->first > min_ask){
-        bid_it++;
-      }
-      bid_ob.erase(bid_ob.cbegin(), bid_it);
-    }
-    
-  } else Rf_error("Invalid side %f", side);
+template <typename Compare>
+double ob_exp_sum(double ref, double focal, double n,
+                  std::map <double, double, Compare> &ob){
+  double out = 0.0;
+  // std::cout << "ref:" << ref << " focal:" << focal << " n:" << n << " entries: ";
+  for(auto& el : ob){
+    // std::cout << el.first << ":" << el.second << ' ';
+    out += exp(-fabs(fabs(el.first - ref) - focal)/n) * el.second;
+  }
+  // std::cout <<  "(" << out << ")" << std::endl;
+  return out;
 }
 
 //' @export
 // [[Rcpp::export]]
-List c_ob_exp_average(NumericVector& prices, NumericVector& sizes, NumericVector& focals, NumericVector& ns){
-  size_t N = prices.length();
+List c_ob_exp_sum(NumericVector& price, NumericVector& size, IntegerVector& side,
+                  NumericVector& focals, NumericVector& ns){
+  
+  size_t N = price.length();
   size_t F = focals.length();
 
-  if (N != size.length()){
-    Rf_error("Input vectors 'prices' and 'sizes' must be of the same length.");
+  if (N != size.length() || N != side.length()){
+    Rf_error("Input vectors 'price',  'size' and 'size' vectors must be of the same length.");
   }
 
   if (F != ns.length()){
     Rf_error("Input vectors 'focals' and 'ns' must be of the same length.");
   }
+  
+  std::map <double, double, std::less<double>> ask_ob;
+  std::map <double, double, std::greater<double>> bid_ob;
 
-  NumericMatrix out(N, F);
-
-  std::map <double, double, std::less<double>> ob;
-  vector<double> acc(F, 0.0);
+  NumericMatrix ask_out(N, F);
+  NumericMatrix bid_out(N, F);
 
   for (size_t n = 0; n < N; n++) {
-    double p = prices[n];
-    double old_size = ob[p];
-    double new_size = sizes[n];
-    double size_diff = new_size - old_size;
 
-    for (size_t f = 0; f < F; f++){
-      double w = exp(-(abs(p - focals[f]))/ns[f]);
-      acc[f] += size_diff * w;
+    update_obs(price[n], size[n], side[n], ask_ob, bid_ob);
+
+    double ask_min = ask_ob.empty() ? NA_REAL : ask_ob.cbegin()->first;
+    double bid_max = bid_ob.empty() ? NA_REAL : bid_ob.cbegin()->first;
+
+    // std::cout << "ask_min:" << ask_min << " bid_max:" << bid_max << std::endl;
+    
+    if (!ISNA(ask_min) && !std::isinf(ask_min) &&
+        !ISNA(bid_max) && !std::isinf(bid_max)) {
+      for (size_t f = 0; f < F; f++) {
+        ask_out(n, f) = ob_exp_sum<std::less<double>>(bid_max, focals[f], ns[f], ask_ob);
+        bid_out(n, f) = ob_exp_sum<std::greater<double>>(ask_min, focals[f], ns[f], bid_ob);
+      }
+    } else {
+      for (size_t f = 0; f < F; f++){
+        ask_out(n, f) = NA_REAL;
+        bid_out(n, f) = NA_REAL;
+      }
     }
-    ob[prices[n]] = new_size;
   }
+
+  List out = List::create(
+    Named( "ask" ) = ask_out, 
+    Named( "bid" ) = bid_out);
+  
   return out;
 }
+
+
+//

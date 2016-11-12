@@ -47,6 +47,21 @@ expect_equal(
                     c(1, 1, 1, 1,   0,  0, 0, 0),
                     c(1, 2, 2, 1,   1,  2, 2, 1)) %>% DF)
 
-expect_equal(tdf, structure(list(bid = c(1, 1, 1, 2.2, 2.2, 2.2, 2.2, -Inf),
-                                 ask = c(Inf,  2, 2, 3, 3, Inf, Inf, Inf)),
+expect_equal(tdf, structure(list(bid = c(1, 1, 1, 2.2, 2.2, 2.2, 2.2, NA),
+                                 ask = c(NA,  2, 2, 3, 3, NA, NA, NA)),
                             .Names = c("bid", "ask"), row.names = c(NA, -8L), class = "data.frame"))
+
+(tdf <- c_ob_exp_sum(c(1, 2, 3, 2.2, 1,  3, 2, 2.2),
+                     c(1, 1, 1, 1,   0,  0, 0, 0),
+                     c(1, 2, 2, 1,   1,  2, 2, 1),
+                     c(0, 1), ns = c(1, 2)))
+
+expect_equal(tdf,
+             structure(list(ask = structure(c(NA, 0.367879441171442, 0.503214724408055, 
+                                              0.449328964117222, 0.449328964117222, NA, NA, NA, NA, 1, 1.60653065971263, 
+                                              0.90483741803596, 0.90483741803596, NA, NA, NA), .Dim = c(8L, 2L)),
+                            bid = structure(c(NA, 0.367879441171442, 0.367879441171442, 0.584664247353834, 0.449328964117222, NA, NA, NA, NA, 1, 1, 1.51136807774859, 
+                                              0.90483741803596, NA, NA, NA), .Dim = c(8L, 2L))),
+                       .Names = c("ask", "bid")))
+
+
