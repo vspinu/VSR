@@ -11,10 +11,25 @@
 ##' @param ns nr units in exp weighting - higher more compre comprehensive sum it is.
 ob_exp_sum <- function(price, size, side, focals, ns){
     focals <- rep_len(focals, length(ns))
-    nms <- if(is.null(names(ns))) as.character(ns) else names(ns)
+    nms <- paste(focals, ns, sep = "_")
     out <- c_ob_exp_sum(price, size, side, focals, ns)
-    ## could be done at c++ level
-    colnames(out$bid) <- nms
-    colnames(out$ask) <- nms
-    out
+    out <- as.data.table(do.call(cbind, out))
+    setnames(out, c(paste0("oa_", nms),
+                    paste0("ob_", nms)))
 }
+
+##' @rdname orderbook
+##' @export
+ob_exp_sum_diff <- function(price, size, side, focals, ns, prob = T){
+    focals <- rep_len(focals, length(ns))
+    nms <- paste("ab", focals, ns, sep = "_")
+    out <- c_ob_exp_sum(price, size, side, focals, ns)
+    out <-
+        if(prob){
+            out$ask/(out$ask + out$bid)
+        } else {
+            out$ask - out$bid
+        }
+    setnames(DT(out), nms)
+}
+

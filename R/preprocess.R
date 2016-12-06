@@ -59,3 +59,45 @@ non0ix <- function(mat, xtendSymm = TRUE){
     if(is(mat, "Matrix")) Matrix:::non0ind(mat, xtendSymm = xtendSymm) + 1L
     else which(mat != 0, arr.ind = T)
 }
+
+
+## if k < 1, interpret as proportion of levels.
+keep_k_levels <- function(f, k = 7, min_in_level = NULL, min_levels = 1, 
+                          other_label = "OTHER", includeNA = T){
+    if(includeNA)
+        f[is.na(f)] <- "NA"
+    f <- as.factor(f)
+    if (length(levels(f)) <= min_levels)
+        return(f)
+    if(k < 1){
+        k <- ceiling(k*length(levels(f)))
+    }
+    tab <- tab(f)
+    if(!is.null(min_in_level))
+        tab <- tab[tab >= min_in_level]
+    best <- head(names(tab), k)
+    levs <- levels(f)
+    levs[!levs %in% best] <- other_label
+    levels(f) <- levs
+    f
+}
+
+balance_factor <- function(f, nlev = NULL, min_in_lev = NULL) {
+    if (!is.null(nlev)){
+        if (!is.null(min_in_lev)) {
+            warning("`nlev` provided, ignoring `min_in_lev`")
+        }
+    } else if (!is.null(min_in_lev)){
+        nlev <- floor(length(f)/min_in_lev)
+    } else {
+        stop("at least one of nlev and min_in_lev must be specified")
+    }
+    out <- as.factor(f)
+    tbl <- rev(tab(f))
+    sums <- cumsum(tbl)
+    part <- cut_interval(sums, nlev)
+    df <- DT(orig_levs = names(tbl), part = part)
+    df[, new_levs := paste(usort(orig_levs), collapse = "|"), by = part]
+    levels(out) <- df[, new_levs[match(levels(out), orig_levs)]]
+    out
+}

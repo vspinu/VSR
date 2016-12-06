@@ -44,7 +44,7 @@ ema <- function(x, date, n = 10, linear = F, cum = F){
 
 ##' @rdname ema
 ##' @param weight weight
-wema <- function(x, weight, date, n = 10, linear = F, cum = F){
+wema <- function(x, weight, date, n = 10, linear = F, cum = T){
     num <- ema(x*weight, date, n, linear, cum)
     den <- ema(weight, date, n, linear, cum)
     out <- num/den
@@ -56,7 +56,7 @@ wema <- function(x, weight, date, n = 10, linear = F, cum = F){
 ##' @rdname ema
 ##' @param nslow nr of periods for slow moving EMA
 ##' @param nfast nr of periods for fast moving EMA
-macd <- function(x, date, nfast = 12, nslow = 26, linear = F, cum = F){
+macd <- function(x, date, nfast = 12, nslow = nfast*3L, linear = F, cum = F){
     fast <- ema(x, date, nfast, linear, cum)
     slow <- ema(x, date, nslow, linear, cum)
     out <- fast/slow - 1
@@ -64,13 +64,31 @@ macd <- function(x, date, nfast = 12, nslow = 26, linear = F, cum = F){
     out
 }
 
+##' @rdname
+wmacd <- function(x, weight, date, nfast = 12, nslow = nfast*4L, linear = F, cum = T){
+    fast <- wema(x, weight, date, nfast, linear, cum)
+    slow <- wema(x, weight, date, nslow, linear, cum)
+    out <- fast/slow - 1
+    out[is.nan(out)] <- 0
+    out
+}
+
 ##' @rdname ema
 ## emsd: Exponential moving standard deviation.
-emsd <- function(x, date, n = 10, normalize = T, linear = F){
-    emean <- ema(x, date, n, linear, F)
+emsd <- function(x, date, n = 10, normalize = T, linear = F, cum = F){
+    emean <- ema(x, date, n, linear, cum)
     dev <- (x - emean)^2L
     if (normalize) dev <- dev/(emean^2 + 0.0001)
-    sqrt(ema(dev, date, n, linear, F))
+    sqrt(ema(dev, date, n, linear, cum))
+}
+
+##' @rdname ema
+## emsd: Exponential moving standard deviation.
+wemsd <- function(x, weight, date, n = 10, normalize = T, linear = F, cum = T){
+    emean <- wema(x, weight, date, n, linear, cum)
+    dev <- (x - emean)^2L
+    if (normalize) dev <- dev/(emean^2 + 0.0001)
+    sqrt(wema(dev, weight, date, n, linear, F))
 }
 
 ##' \code{xxx2} functions are two sided version (aka filters).

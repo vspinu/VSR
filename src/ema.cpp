@@ -14,14 +14,23 @@ NumericVector c_cumema(NumericVector& X, NumericVector& days, double n){
   NumericVector out(N);
 
   if (N > 0) {
-    out[0] = X[0];
+    int prev = 0;
+    while (ISNA(X[prev])) {
+      out[prev] = NA_REAL;
+      prev++;
+    }
+    out[prev] = X[prev];
 
-    for(int i = 1; i < N; i++){
-      int prev = i - 1;
-      double delta = days[i] - days[prev];
-      if( delta < 0) Rf_error("days argument is not increasing");
-      double W = exp(-delta/n);
-      out[i] = W*out[prev] + X[i];
+    for(int i = prev + 1; i < N; i++){
+      if (ISNA(X[i])){
+        out[i] = NA_REAL;
+      } else {
+        double delta = days[i] - days[prev];
+        if( delta < 0) Rf_error("days argument is not increasing");
+        double W = exp(-delta/n);
+        out[i] = W*out[prev] + X[i];
+        prev = i;
+      }
     }
   }
   return out;
@@ -38,13 +47,22 @@ NumericVector c_ema(NumericVector& X, NumericVector& days, double n){
   NumericVector out(N);
 
   if (N > 0) {
-    out[0] = X[0];
-    for (int i = 1; i < N; i++) {
-      int prev = i - 1;
-      double edelta = days[i] - days[prev];
-      if (edelta < 0) Rf_error("days argument is not increasing");
-      double W = exp(-edelta/n);
-      out[i] = W*out[prev] + (1.0 - W)*X[i];
+    int prev = 0;
+    while (ISNA(X[prev])) {
+      out[prev] = NA_REAL;
+      prev++;
+    }
+    out[prev] = X[prev];
+    for (int i = prev + 1; i < N; i++) {
+      if (ISNA(X[i])){
+        out[i] = NA_REAL;
+      } else {
+        double edelta = days[i] - days[prev];
+        if (edelta < 0) Rf_error("days argument is not increasing");
+        double W = exp(-edelta/n);
+        out[i] = W*out[prev] + (1.0 - W)*X[i];
+        prev = i;
+      }
     }
   }
   return out;
@@ -64,16 +82,24 @@ NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double n){
   NumericVector out(N);
 
   if (N > 0) {
-    out[0] = X[0];
-
-    for(int i = 1; i < N; i++){
-      int prev = i - 1;
-      double a = (days[i] - days[prev])/n;
-      double W = exp( -a );
-      double V = ( 1 - W ) / a;
-      out[i] = ( W * out[prev] ) + (( V - W ) * X[prev] ) + (( 1.0 - V ) * X[i] );
+    int prev = 0;
+    while (ISNA(X[prev])){
+      prev++;
+      out[prev] = X[prev];
     }
+    out[prev] = X[prev];
     
+    for(int i = prev + 1; i < N; i++){
+      if (ISNA(X[i])) {
+        out[i] = NA_REAL;
+      } else {
+        double a = (days[i] - days[prev])/n;
+        double W = exp(-a);
+        double V = (1 - W)/a;
+        out[i] = (W * out[prev]) + ((V - W) * X[prev]) + ((1.0 - V) * X[i]);
+        prev = i;
+      }
+    }
   }
   return out;
 }
@@ -81,7 +107,6 @@ NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double n){
 //' @export
 // [[Rcpp::export]]
 NumericVector c_ediversity(IntegerVector& X, int N, double n){
-  ////// NumericVector c_ediversity(IntegerVector& X, int N, NumericVector& days, double n){
   // X: ints from 1 to N inclusively
   // days: increasing vector of timestamps (in days)
   vector<double> holder(N, 0); // use 1 indexed version

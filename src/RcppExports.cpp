@@ -123,6 +123,85 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// c_cummin
+NumericVector c_cummin(const NumericVector& X);
+RcppExport SEXP VSR_c_cummin(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericVector& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_cummin(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_cummax
+NumericVector c_cummax(const NumericVector& X);
+RcppExport SEXP VSR_c_cummax(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericVector& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_cummax(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_roll_min
+NumericVector c_roll_min(SEXP DATE, NumericVector& X, double left_delay, double right_delay);
+RcppExport SEXP VSR_c_roll_min(SEXP DATESEXP, SEXP XSEXP, SEXP left_delaySEXP, SEXP right_delaySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type DATE(DATESEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type left_delay(left_delaySEXP);
+    Rcpp::traits::input_parameter< double >::type right_delay(right_delaySEXP);
+    rcpp_result_gen = Rcpp::wrap(c_roll_min(DATE, X, left_delay, right_delay));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_roll_max
+NumericVector c_roll_max(SEXP DATE, NumericVector& X, double left_delay, double right_delay);
+RcppExport SEXP VSR_c_roll_max(SEXP DATESEXP, SEXP XSEXP, SEXP left_delaySEXP, SEXP right_delaySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type DATE(DATESEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type left_delay(left_delaySEXP);
+    Rcpp::traits::input_parameter< double >::type right_delay(right_delaySEXP);
+    rcpp_result_gen = Rcpp::wrap(c_roll_max(DATE, X, left_delay, right_delay));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_roll_mean
+NumericVector c_roll_mean(SEXP DATE, NumericVector& X, double left_delay, double right_delay);
+RcppExport SEXP VSR_c_roll_mean(SEXP DATESEXP, SEXP XSEXP, SEXP left_delaySEXP, SEXP right_delaySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type DATE(DATESEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type left_delay(left_delaySEXP);
+    Rcpp::traits::input_parameter< double >::type right_delay(right_delaySEXP);
+    rcpp_result_gen = Rcpp::wrap(c_roll_mean(DATE, X, left_delay, right_delay));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_roll_quantile
+NumericVector c_roll_quantile(SEXP DATE, NumericVector& X, double left_delay, double right_delay, double prob);
+RcppExport SEXP VSR_c_roll_quantile(SEXP DATESEXP, SEXP XSEXP, SEXP left_delaySEXP, SEXP right_delaySEXP, SEXP probSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type DATE(DATESEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type left_delay(left_delaySEXP);
+    Rcpp::traits::input_parameter< double >::type right_delay(right_delaySEXP);
+    Rcpp::traits::input_parameter< double >::type prob(probSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_roll_quantile(DATE, X, left_delay, right_delay, prob));
+    return rcpp_result_gen;
+END_RCPP
+}
 // top_index
 IntegerVector top_index(SEXP x, int n, bool ascending);
 RcppExport SEXP VSR_top_index(SEXP xSEXP, SEXP nSEXP, SEXP ascendingSEXP) {

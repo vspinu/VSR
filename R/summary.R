@@ -150,3 +150,20 @@ xdiff <- function(A, B){
     list("A-B" = setdiff(A, B),
          "B-A" = setdiff(B, A))
 }
+
+xdiffptab <- function(A, B){
+    a <- unique(A)
+    b <- unique(B)
+    aN <- length(a)
+    bN <- length(b)
+    int <- length(intersect(a, b))
+    ab <- length(setdiff(a, b))
+    ba <- length(setdiff(b, a))
+    docs <- c(deparse(substitute(A)), deparse(substitute(B)))
+    DT(docs = docs, 
+       "unique_N" = c(aN, bN),
+       "in" = c(int, int), 
+       "not_in" = c(ab, ba), 
+       "in_%" = c(int/aN, int/bN),
+       "not_in_%" = c(ab/aN, ba/bN))
+}

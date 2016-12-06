@@ -21,7 +21,8 @@ kmeans_outliers <- function(data, N = .05, centers = NULL, ...){
     head(order(distances, decreasing = T), N)
 }
 
-get_terms <- function(fit, vars = NULL, qrange = c(.02, .98), sample = 1000){
+
+model_terms <- function(fit, vars = NULL, qrange = c(.02, .98), subsample = 200){
     if(is(fit, "gbm")) {
         if(is.null(vars))
             vars <- fit$var.names
@@ -33,22 +34,43 @@ get_terms <- function(fit, vars = NULL, qrange = c(.02, .98), sample = 1000){
                                var = nm)
                 }))
     } else {
-        terms_data <- termplot(fit, plot = F, terms = vars)
-        do.call(rbind,
-                mapply(function(x, nm){
-                    if(!is.factor(x$x)){
-                        if(nrow(x) > sample)
-                            x <- x[sample(1:nrow(x), sample), ]
-                        if(!is.null(qrange))
-                            x <- x[which_qrange(x$x, qrange), ]
-                        cbind(as.data.frame(x), var = nm)
-                    }
-                }, terms_data, names(terms_data), SIMPLIFY = F))
+        terms_data <- termplot(fit, plot = F)
+        mapply(function(x, nm){
+            if(!is.factor(x$x)){
+                if(nrow(x) > subsample)
+                    x <- x[sample(1:nrow(x), subsample), ]
+                if(!is.null(qrange))
+                    x <- x[which_qrange(x$x, qrange), ]
+                cbind(as.data.frame(x), var = nm)
+            }
+        }, terms_data, names(terms_data), SIMPLIFY = F) %>% rbindlist
     }
 }
 
-ggterms <- function(fit, vars = NULL, qrange = c(.02, .98), sample = 1000, facet = T){
-    terms <- get_terms(fit, vars, qrange, sample)
+## second versions because I forgot that I had theh above 
+model_terms2 <- function(model, subsample = 200){
+    termplot(model, plot = F) %>%
+        map( ~ sample_n(., size = min(nrow(.), subsample))) %>% 
+        tibble(terms = .) %>%
+        unnest(terms, .id = names(.))
+}
+
+ggterms <- function(fit, vars = NULL, qrange = c(.02, .98), subsample = 200, facet = T,
+                    sort = T, max_vars = Inf){
+    terms <-
+        if(is.data.frame(fit)) fit
+        else model_terms(fit, vars, qrange, subsample)
+    var0 <- factor(as.character(terms$var))
+    nvars <- length(levels(var0))
+    if(sort){
+        range <- terms[, diff(range(y)), by = "var"]
+        var0 <- factor(var0, range[, var[order(V1, decreasing = T)]], ordered = T)
+        terms$var <- var0
+    }
+    if(max_vars < nvars){
+        keep <- levels(var0)[1:max_vars]
+        terms <- terms[var %in% keep]
+    }
     ggplot(terms, aes_string("x", "y", group = "var")) +
         (if(facet) geom_line() else geom_line(color = var)) + 
         (if(facet) facet_wrap(~ var , scales = "free_x"))  

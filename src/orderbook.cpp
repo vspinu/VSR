@@ -124,12 +124,18 @@ List c_ob_margin(NumericVector& X, NumericVector& V, IntegerVector& side){
 
 template <typename Compare>
 double ob_exp_sum(double ref, double focal, double n,
-                  std::map <double, double, Compare> &ob){
-  double out = 0.0;
+                  std::map <double, double, Compare> &ob,
+                  double min_exp_bound = 0.001){
+  double out = 0.0, wo = 0.0, wn = 0.0;
   // std::cout << "ref:" << ref << " focal:" << focal << " n:" << n << " entries: ";
   for(auto& el : ob){
     // std::cout << el.first << ":" << el.second << ' ';
-    out += exp(-fabs(fabs(el.first - ref) - focal)/n) * el.second;
+    wn = exp(-fabs(fabs(el.first - ref) - focal)/n);
+    if (wn < wo && wn < min_exp_bound)
+      // Break when weigh decreased below boundary to save some cycles. 
+      break;
+    out += wn * el.second;
+    wo = wn;
   }
   // std::cout <<  "(" << out << ")" << std::endl;
   return out;
@@ -157,9 +163,13 @@ List c_ob_exp_sum(NumericVector& price, NumericVector& size, IntegerVector& side
   NumericMatrix ask_out(N, F);
   NumericMatrix bid_out(N, F);
 
+  double am = -1, bm = -1;
+
   for (size_t n = 0; n < N; n++) {
 
-    update_obs(price[n], size[n], side[n], ask_ob, bid_ob);
+    int s = side[n];
+    
+    update_obs(price[n], size[n], s, ask_ob, bid_ob);
 
     double ask_min = ask_ob.empty() ? NA_REAL : ask_ob.cbegin()->first;
     double bid_max = bid_ob.empty() ? NA_REAL : bid_ob.cbegin()->first;
@@ -168,16 +178,36 @@ List c_ob_exp_sum(NumericVector& price, NumericVector& size, IntegerVector& side
     
     if (!ISNA(ask_min) && !std::isinf(ask_min) &&
         !ISNA(bid_max) && !std::isinf(bid_max)) {
-      for (size_t f = 0; f < F; f++) {
-        ask_out(n, f) = ob_exp_sum<std::less<double>>(bid_max, focals[f], ns[f], ask_ob);
-        bid_out(n, f) = ob_exp_sum<std::greater<double>>(ask_min, focals[f], ns[f], bid_ob);
+      // recompute on actual change only
+      if (bm != bid_max || s == 2) {
+        for (size_t f = 0; f < F; f++) {
+          ask_out(n, f) = ob_exp_sum<std::less<double>>(bid_max, focals[f], ns[f], ask_ob);
+        }
+      } else {
+        for (size_t f = 0; f < F; f++) {
+          ask_out(n, f) = ask_out(n - 1, f);
+        }
       }
+      
+      if (am != ask_min || s == 1) {
+        for (size_t f = 0; f < F; f++) {
+          bid_out(n, f) = ob_exp_sum<std::greater<double>>(ask_min, focals[f], ns[f], bid_ob);
+        }
+      } else {
+        for (size_t f = 0; f < F; f++) {
+          bid_out(n, f) = bid_out(n - 1, f);
+        }
+      }
+
     } else {
       for (size_t f = 0; f < F; f++){
         ask_out(n, f) = NA_REAL;
         bid_out(n, f) = NA_REAL;
       }
     }
+
+    am = ask_min;
+    bm = bid_max;
   }
 
   List out = List::create(

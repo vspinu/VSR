@@ -45,6 +45,36 @@ c_ob_exp_sum <- function(price, size, side, focals, ns) {
     .Call('VSR_c_ob_exp_sum', PACKAGE = 'VSR', price, size, side, focals, ns)
 }
 
+#' @export
+c_cummin <- function(X) {
+    .Call('VSR_c_cummin', PACKAGE = 'VSR', X)
+}
+
+#' @export
+c_cummax <- function(X) {
+    .Call('VSR_c_cummax', PACKAGE = 'VSR', X)
+}
+
+#' @export
+c_roll_min <- function(DATE, X, left_delay, right_delay) {
+    .Call('VSR_c_roll_min', PACKAGE = 'VSR', DATE, X, left_delay, right_delay)
+}
+
+#' @export
+c_roll_max <- function(DATE, X, left_delay, right_delay) {
+    .Call('VSR_c_roll_max', PACKAGE = 'VSR', DATE, X, left_delay, right_delay)
+}
+
+#' @export
+c_roll_mean <- function(DATE, X, left_delay, right_delay) {
+    .Call('VSR_c_roll_mean', PACKAGE = 'VSR', DATE, X, left_delay, right_delay)
+}
+
+#' @export
+c_roll_quantile <- function(DATE, X, left_delay, right_delay, prob) {
+    .Call('VSR_c_roll_quantile', PACKAGE = 'VSR', DATE, X, left_delay, right_delay, prob)
+}
+
 top_index <- function(x, n, ascending = FALSE) {
     .Call('VSR_top_index', PACKAGE = 'VSR', x, n, ascending)
 }

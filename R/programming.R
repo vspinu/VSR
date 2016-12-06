@@ -297,39 +297,6 @@ hfilter <- function(hlist, ..., keep_names = c(), check_all_levels = T){
 ## hfilter(tt, c("c", "b"))
 ## hfilter(tt, c("c", "a"))
 
-
-keep_k_levels <- function(f, k = 7, other_label = "OTHER", includeNA = T){
-    if(includeNA)
-        f[is.na(f)] <- "NA"
-    f <- as.factor(f)
-    best <- head(names(tab(f)), k)
-    levs <- levels(f)
-    levs[!levs %in% best] <- other_label
-    levels(f) <- levs
-    f
-}
-
-balance_factor <- function(f, nlev = NULL, min_in_lev = NULL) {
-    if (!is.null(nlev)){
-        if (!is.null(min_in_lev)) {
-            warning("`nlev` provided, ignoring `min_in_lev`")
-        }
-    } else if (!is.null(min_in_lev)){
-        nlev <- floor(length(f)/min_in_lev)
-    } else {
-        stop("at least one of nlev and min_in_lev must be specified")
-    }
-    out <- as.factor(f)
-    tbl <- rev(tab(f))
-    sums <- cumsum(tbl)
-    part <- cut_interval(sums, nlev)
-    df <- DT(orig_levs = names(tbl), part = part)
-    df[, new_levs := paste(usort(orig_levs), collapse = "|"), by = part]
-    levels(out) <- df[, new_levs[match(levels(out), orig_levs)]]
-    out
-
-}
-
 multiple_matches <- function(dt){
     dt <- unique(dt)
     lens <- sapply(dt, ulen)
