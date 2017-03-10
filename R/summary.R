@@ -100,6 +100,8 @@ ptabna <- function(..., margin = NULL){
 }
 
 which_qrange <- function(var, range, max_levels){
+    if (length(range) == 1)
+        range <- c(range, 1 - range)
     if(is.character(var))
         rep.int(T, length(var))
     else if(is.factor(var)){

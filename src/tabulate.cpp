@@ -11,7 +11,7 @@ List tabulate(const Vector<RTYPE>& v)
 
   for (auto it = v.begin(); it != v.end(); it++){
     // .find doesn't play nicely with double NAs, so just ignore for now. This
-    // NA check is fucked, but there seem no other way around
+    // NA check is awful, but there seem no other way around
     if(!ISNA(*it) && *it != NA_INTEGER){
       auto found = counts.find(*it);
       if (found != counts.end()){

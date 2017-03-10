@@ -76,7 +76,6 @@ ggterms <- function(fit, vars = NULL, qrange = c(.02, .98), subsample = 200, fac
         (if(facet) facet_wrap(~ var , scales = "free_x"))  
 }
 
-
 quantile_knots <- qknots <-
     function(x, k = 4, alpha = .02){
         breaks <- seq(alpha, 1 - alpha, length.out = k + 2)

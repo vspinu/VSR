@@ -62,11 +62,14 @@ non0ix <- function(mat, xtendSymm = TRUE){
 
 
 ## if k < 1, interpret as proportion of levels.
-keep_k_levels <- function(f, k = 7, min_in_level = NULL, min_levels = 1, 
+keep_k_levels <- function(f, k = if(is.null(min_in_level)) 7 else +Inf,
+                          min_in_level = NULL, min_levels = 1, 
                           other_label = "OTHER", includeNA = T){
-    if(includeNA)
-        f[is.na(f)] <- "NA"
-    f <- as.factor(f)
+    if(includeNA){
+        f <- factor(f, exclude = NULL)
+    } else {
+        f <- as.factor(f)
+    }
     if (length(levels(f)) <= min_levels)
         return(f)
     if(k < 1){
