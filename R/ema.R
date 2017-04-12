@@ -25,7 +25,8 @@ emaR <- function(x, date, n){
 
 ##' Exponential (weighted) moving averages and derivatives for iregular time
 ##' series.
-##' 
+##'
+##' \code{fwd_xyz} versions are forward looking emas.
 ##' @param x values of the seires
 ##' @param date time index
 ##' @param n ema parameter - number of periods (n = 1/theta where -theta is the
@@ -40,6 +41,11 @@ ema <- function(x, date, n = 10, linear = F, cum = F){
         else if (linear) c_ema_lin
         else c_ema
     f(x, date, n)
+}
+
+##' @rdname ema
+fwd_ema <- function(x, date, n = 10, linear = F, cum = F) {
+    rev(ema(rev(x), -rev(as.numeric(date)), n, linear, cum))
 }
 
 ##' @rdname ema
@@ -83,6 +89,11 @@ emsd <- function(x, date, n = 10, normalize = T, linear = F, cum = F){
 }
 
 ##' @rdname ema
+fwd_emsd <- function(x, date, n = 10, linear = F, cum = F) {
+    rev(emsd(rev(x), -rev(as.numeric(date)), n, linear, cum))
+}
+
+##' @rdname ema
 ## emsd: Exponential moving standard deviation.
 wemsd <- function(x, weight, date, n = 10, normalize = T, linear = F, cum = T){
     emean <- wema(x, weight, date, n, linear, cum)
@@ -99,7 +110,7 @@ ema2 <- function(x, date, n = 10, linear = F, cum = F){
         else if (linear) c_ema_lin
         else c_ema
     forw <- f(x, date, n)
-    back <- f(rev(x), -rev(date), n)
+    back <- f(rev(x), -rev(as.numeric(date)), n)
     (forw + rev(back))/2
 }
 
@@ -112,7 +123,6 @@ wema2 <- function(x, weight, date, n = 10, linear = F, cum = F){
     out[num == 0] <- 0
     out
 }
-
 
 ##' @rdname ema
 macd2 <- function(x, date, nfast = 12, nslow = 26, linear = F, cum = F){

@@ -99,20 +99,22 @@ ptabna <- function(..., margin = NULL){
     }
 }
 
-which_qrange <- function(var, range, max_levels){
+which_qrange <- function(var, range = c(.01, .99), max_levels = 20){
     if (length(range) == 1)
         range <- c(range, 1 - range)
-    if(is.character(var))
-        rep.int(T, length(var))
-    else if(is.factor(var)){
-        tbl <- cumsum(rev(ptab(var)))
-        nms <- names(tbl[tbl > (range[[1]] + 1 - range[[2]])])
-        nms <- tail(nms, max_levels)
-        var %in% nms
-    } else {
-        qs <- quantile(var, probs = range, na.rm = T)
-        var >= qs[[1]] & var <= qs[[2]]
-    }
+    out <- 
+        if(is.character(var))
+            rep.int(T, length(var))
+        else if(is.factor(var)){
+            tbl <- cumsum(rev(ptab(var)))
+            nms <- names(tbl[tbl > (range[[1]] + 1 - range[[2]])])
+            nms <- tail(nms, max_levels)
+            var %in% nms
+        } else {
+            qs <- quantile(var, probs = range, na.rm = T)
+            var >= qs[[1]] & var <= qs[[2]]
+        }
+    out
 }
 
 ##' @export
