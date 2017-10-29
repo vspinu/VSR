@@ -1,0 +1,2 @@
+#!/bin/bash
+rm -f src/*.a src/*.o src/*.so src/*.dylib src/*~ *~ ./src/*/*/*.o 
