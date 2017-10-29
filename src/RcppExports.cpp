@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // c_cumema
 NumericVector c_cumema(NumericVector& X, NumericVector& days, double n);
-RcppExport SEXP VSR_c_cumema(SEXP XSEXP, SEXP daysSEXP, SEXP nSEXP) {
+RcppExport SEXP _VSR_c_cumema(SEXP XSEXP, SEXP daysSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,7 +20,7 @@ END_RCPP
 }
 // c_ema
 NumericVector c_ema(NumericVector& X, NumericVector& days, double n);
-RcppExport SEXP VSR_c_ema(SEXP XSEXP, SEXP daysSEXP, SEXP nSEXP) {
+RcppExport SEXP _VSR_c_ema(SEXP XSEXP, SEXP daysSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -33,7 +33,7 @@ END_RCPP
 }
 // c_ema_lin
 NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double n);
-RcppExport SEXP VSR_c_ema_lin(SEXP XSEXP, SEXP daysSEXP, SEXP nSEXP) {
+RcppExport SEXP _VSR_c_ema_lin(SEXP XSEXP, SEXP daysSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -46,7 +46,7 @@ END_RCPP
 }
 // c_ediversity
 NumericVector c_ediversity(IntegerVector& X, int N, double n);
-RcppExport SEXP VSR_c_ediversity(SEXP XSEXP, SEXP NSEXP, SEXP nSEXP) {
+RcppExport SEXP _VSR_c_ediversity(SEXP XSEXP, SEXP NSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -59,7 +59,7 @@ END_RCPP
 }
 // c_cum_unique_count
 IntegerVector c_cum_unique_count(IntegerVector& X, int N);
-RcppExport SEXP VSR_c_cum_unique_count(SEXP XSEXP, SEXP NSEXP) {
+RcppExport SEXP _VSR_c_cum_unique_count(SEXP XSEXP, SEXP NSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -71,7 +71,7 @@ END_RCPP
 }
 // c_rdmean_pow
 NumericVector c_rdmean_pow(NumericVector x, NumericVector w, NumericVector p);
-RcppExport SEXP VSR_c_rdmean_pow(SEXP xSEXP, SEXP wSEXP, SEXP pSEXP) {
+RcppExport SEXP _VSR_c_rdmean_pow(SEXP xSEXP, SEXP wSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -84,7 +84,7 @@ END_RCPP
 }
 // c_apk1
 double c_apk1(const int k, const int actual, const IntegerVector& predicted);
-RcppExport SEXP VSR_c_apk1(SEXP kSEXP, SEXP actualSEXP, SEXP predictedSEXP) {
+RcppExport SEXP _VSR_c_apk1(SEXP kSEXP, SEXP actualSEXP, SEXP predictedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -97,7 +97,7 @@ END_RCPP
 }
 // c_ob_margin
 List c_ob_margin(NumericVector& X, NumericVector& V, IntegerVector& side);
-RcppExport SEXP VSR_c_ob_margin(SEXP XSEXP, SEXP VSEXP, SEXP sideSEXP) {
+RcppExport SEXP _VSR_c_ob_margin(SEXP XSEXP, SEXP VSEXP, SEXP sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -110,7 +110,7 @@ END_RCPP
 }
 // c_ob_exp_sum
 List c_ob_exp_sum(NumericVector& price, NumericVector& size, IntegerVector& side, NumericVector& focals, NumericVector& ns);
-RcppExport SEXP VSR_c_ob_exp_sum(SEXP priceSEXP, SEXP sizeSEXP, SEXP sideSEXP, SEXP focalsSEXP, SEXP nsSEXP) {
+RcppExport SEXP _VSR_c_ob_exp_sum(SEXP priceSEXP, SEXP sizeSEXP, SEXP sideSEXP, SEXP focalsSEXP, SEXP nsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -125,7 +125,7 @@ END_RCPP
 }
 // c_roll_min
 NumericVector c_roll_min(SEXP DATE, NumericVector& X, double left_bound, double right_bound, bool left_open, bool right_open);
-RcppExport SEXP VSR_c_roll_min(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
+RcppExport SEXP _VSR_c_roll_min(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -141,7 +141,7 @@ END_RCPP
 }
 // c_roll_max
 NumericVector c_roll_max(SEXP DATE, NumericVector& X, double left_bound, double right_bound, bool left_open, bool right_open);
-RcppExport SEXP VSR_c_roll_max(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
+RcppExport SEXP _VSR_c_roll_max(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -157,7 +157,7 @@ END_RCPP
 }
 // c_roll_mean
 NumericVector c_roll_mean(SEXP DATE, NumericVector& X, double left_bound, double right_bound, bool left_open, bool right_open);
-RcppExport SEXP VSR_c_roll_mean(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
+RcppExport SEXP _VSR_c_roll_mean(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -171,25 +171,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// c_roll_last
-NumericVector c_roll_last(SEXP DATE, NumericVector& X, double left_bound, double right_bound, bool left_open, bool right_open);
-RcppExport SEXP VSR_c_roll_last(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type DATE(DATESEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< double >::type left_bound(left_boundSEXP);
-    Rcpp::traits::input_parameter< double >::type right_bound(right_boundSEXP);
-    Rcpp::traits::input_parameter< bool >::type left_open(left_openSEXP);
-    Rcpp::traits::input_parameter< bool >::type right_open(right_openSEXP);
-    rcpp_result_gen = Rcpp::wrap(c_roll_last(DATE, X, left_bound, right_bound, left_open, right_open));
-    return rcpp_result_gen;
-END_RCPP
-}
 // c_roll_first
 NumericVector c_roll_first(SEXP DATE, NumericVector& X, double left_bound, double right_bound, bool left_open, bool right_open);
-RcppExport SEXP VSR_c_roll_first(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
+RcppExport SEXP _VSR_c_roll_first(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -203,9 +187,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// c_roll_last
+NumericVector c_roll_last(SEXP DATE, NumericVector& X, double left_bound, double right_bound, bool left_open, bool right_open);
+RcppExport SEXP _VSR_c_roll_last(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type DATE(DATESEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type left_bound(left_boundSEXP);
+    Rcpp::traits::input_parameter< double >::type right_bound(right_boundSEXP);
+    Rcpp::traits::input_parameter< bool >::type left_open(left_openSEXP);
+    Rcpp::traits::input_parameter< bool >::type right_open(right_openSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_roll_last(DATE, X, left_bound, right_bound, left_open, right_open));
+    return rcpp_result_gen;
+END_RCPP
+}
 // c_roll_quantile
 NumericVector c_roll_quantile(SEXP DATE, NumericVector& X, double left_bound, double right_bound, bool left_open, bool right_open, double prob);
-RcppExport SEXP VSR_c_roll_quantile(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP, SEXP probSEXP) {
+RcppExport SEXP _VSR_c_roll_quantile(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP, SEXP probSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -222,7 +222,7 @@ END_RCPP
 }
 // c_cummin
 NumericVector c_cummin(const NumericVector& X);
-RcppExport SEXP VSR_c_cummin(SEXP XSEXP) {
+RcppExport SEXP _VSR_c_cummin(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -233,7 +233,7 @@ END_RCPP
 }
 // c_cummax
 NumericVector c_cummax(const NumericVector& X);
-RcppExport SEXP VSR_c_cummax(SEXP XSEXP) {
+RcppExport SEXP _VSR_c_cummax(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -244,7 +244,7 @@ END_RCPP
 }
 // top_index
 IntegerVector top_index(SEXP x, int n, bool ascending);
-RcppExport SEXP VSR_top_index(SEXP xSEXP, SEXP nSEXP, SEXP ascendingSEXP) {
+RcppExport SEXP _VSR_top_index(SEXP xSEXP, SEXP nSEXP, SEXP ascendingSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -257,7 +257,7 @@ END_RCPP
 }
 // c_fast_paste0
 std::vector< std::string > c_fast_paste0(std::vector<std::string>& str1, std::vector<std::string>& str2);
-RcppExport SEXP VSR_c_fast_paste0(SEXP str1SEXP, SEXP str2SEXP) {
+RcppExport SEXP _VSR_c_fast_paste0(SEXP str1SEXP, SEXP str2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -269,7 +269,7 @@ END_RCPP
 }
 // c_tab
 List c_tab(SEXP x);
-RcppExport SEXP VSR_c_tab(SEXP xSEXP) {
+RcppExport SEXP _VSR_c_tab(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -278,14 +278,56 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// c_fill_na
-NumericVector c_fill_na(NumericVector& x);
-RcppExport SEXP VSR_c_fill_na(SEXP xSEXP) {
+// c_fill_locf_na
+NumericVector c_fill_locf_na(NumericVector& x);
+RcppExport SEXP _VSR_c_fill_locf_na(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(c_fill_na(x));
+    rcpp_result_gen = Rcpp::wrap(c_fill_locf_na(x));
     return rcpp_result_gen;
 END_RCPP
+}
+// c_fill_locf_nonfinite
+NumericVector c_fill_locf_nonfinite(NumericVector& x);
+RcppExport SEXP _VSR_c_fill_locf_nonfinite(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_fill_locf_nonfinite(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_VSR_c_cumema", (DL_FUNC) &_VSR_c_cumema, 3},
+    {"_VSR_c_ema", (DL_FUNC) &_VSR_c_ema, 3},
+    {"_VSR_c_ema_lin", (DL_FUNC) &_VSR_c_ema_lin, 3},
+    {"_VSR_c_ediversity", (DL_FUNC) &_VSR_c_ediversity, 3},
+    {"_VSR_c_cum_unique_count", (DL_FUNC) &_VSR_c_cum_unique_count, 2},
+    {"_VSR_c_rdmean_pow", (DL_FUNC) &_VSR_c_rdmean_pow, 3},
+    {"_VSR_c_apk1", (DL_FUNC) &_VSR_c_apk1, 3},
+    {"_VSR_c_ob_margin", (DL_FUNC) &_VSR_c_ob_margin, 3},
+    {"_VSR_c_ob_exp_sum", (DL_FUNC) &_VSR_c_ob_exp_sum, 5},
+    {"_VSR_c_roll_min", (DL_FUNC) &_VSR_c_roll_min, 6},
+    {"_VSR_c_roll_max", (DL_FUNC) &_VSR_c_roll_max, 6},
+    {"_VSR_c_roll_mean", (DL_FUNC) &_VSR_c_roll_mean, 6},
+    {"_VSR_c_roll_first", (DL_FUNC) &_VSR_c_roll_first, 6},
+    {"_VSR_c_roll_last", (DL_FUNC) &_VSR_c_roll_last, 6},
+    {"_VSR_c_roll_quantile", (DL_FUNC) &_VSR_c_roll_quantile, 7},
+    {"_VSR_c_cummin", (DL_FUNC) &_VSR_c_cummin, 1},
+    {"_VSR_c_cummax", (DL_FUNC) &_VSR_c_cummax, 1},
+    {"_VSR_top_index", (DL_FUNC) &_VSR_top_index, 3},
+    {"_VSR_c_fast_paste0", (DL_FUNC) &_VSR_c_fast_paste0, 2},
+    {"_VSR_c_tab", (DL_FUNC) &_VSR_c_tab, 1},
+    {"_VSR_c_fill_locf_na", (DL_FUNC) &_VSR_c_fill_locf_na, 1},
+    {"_VSR_c_fill_locf_nonfinite", (DL_FUNC) &_VSR_c_fill_locf_nonfinite, 1},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_VSR(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }
