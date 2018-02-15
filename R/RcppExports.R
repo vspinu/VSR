@@ -3,106 +3,116 @@
 
 #' @export
 c_cumema <- function(X, days, n) {
-    .Call('_VSR_c_cumema', PACKAGE = 'VSR', X, days, n)
+    .Call(`_VSR_c_cumema`, X, days, n)
 }
 
 #' @export
 c_ema <- function(X, days, n) {
-    .Call('_VSR_c_ema', PACKAGE = 'VSR', X, days, n)
+    .Call(`_VSR_c_ema`, X, days, n)
 }
 
 #' @export
 c_ema_lin <- function(X, days, n) {
-    .Call('_VSR_c_ema_lin', PACKAGE = 'VSR', X, days, n)
+    .Call(`_VSR_c_ema_lin`, X, days, n)
 }
 
 #' @export
 c_ediversity <- function(X, N, n) {
-    .Call('_VSR_c_ediversity', PACKAGE = 'VSR', X, N, n)
+    .Call(`_VSR_c_ediversity`, X, N, n)
 }
 
 #' @export
 c_cum_unique_count <- function(X, N) {
-    .Call('_VSR_c_cum_unique_count', PACKAGE = 'VSR', X, N)
+    .Call(`_VSR_c_cum_unique_count`, X, N)
 }
 
 c_rdmean_pow <- function(x, w, p) {
-    .Call('_VSR_c_rdmean_pow', PACKAGE = 'VSR', x, w, p)
+    .Call(`_VSR_c_rdmean_pow`, x, w, p)
 }
 
 #' @export
 c_apk1 <- function(k, actual, predicted) {
-    .Call('_VSR_c_apk1', PACKAGE = 'VSR', k, actual, predicted)
+    .Call(`_VSR_c_apk1`, k, actual, predicted)
 }
 
 #' @export
 c_ob_margin <- function(X, V, side) {
-    .Call('_VSR_c_ob_margin', PACKAGE = 'VSR', X, V, side)
+    .Call(`_VSR_c_ob_margin`, X, V, side)
 }
 
 #' @export
 c_ob_exp_sum <- function(price, size, side, focals, ns) {
-    .Call('_VSR_c_ob_exp_sum', PACKAGE = 'VSR', price, size, side, focals, ns)
+    .Call(`_VSR_c_ob_exp_sum`, price, size, side, focals, ns)
 }
 
 #' @export
 c_roll_min <- function(DATE, X, left_bound, right_bound, left_open, right_open) {
-    .Call('_VSR_c_roll_min', PACKAGE = 'VSR', DATE, X, left_bound, right_bound, left_open, right_open)
+    .Call(`_VSR_c_roll_min`, DATE, X, left_bound, right_bound, left_open, right_open)
 }
 
 #' @export
 c_roll_max <- function(DATE, X, left_bound, right_bound, left_open, right_open) {
-    .Call('_VSR_c_roll_max', PACKAGE = 'VSR', DATE, X, left_bound, right_bound, left_open, right_open)
+    .Call(`_VSR_c_roll_max`, DATE, X, left_bound, right_bound, left_open, right_open)
 }
 
 #' @export
 c_roll_mean <- function(DATE, X, left_bound, right_bound, left_open, right_open) {
-    .Call('_VSR_c_roll_mean', PACKAGE = 'VSR', DATE, X, left_bound, right_bound, left_open, right_open)
+    .Call(`_VSR_c_roll_mean`, DATE, X, left_bound, right_bound, left_open, right_open)
+}
+
+#' @export
+c_roll_sum <- function(DATE, X, left_bound, right_bound, left_open, right_open) {
+    .Call(`_VSR_c_roll_sum`, DATE, X, left_bound, right_bound, left_open, right_open)
+}
+
+#' @export
+c_roll_prod <- function(DATE, X, left_bound, right_bound, left_open, right_open) {
+    .Call(`_VSR_c_roll_prod`, DATE, X, left_bound, right_bound, left_open, right_open)
 }
 
 #' @export
 c_roll_first <- function(DATE, X, left_bound, right_bound, left_open, right_open) {
-    .Call('_VSR_c_roll_first', PACKAGE = 'VSR', DATE, X, left_bound, right_bound, left_open, right_open)
+    .Call(`_VSR_c_roll_first`, DATE, X, left_bound, right_bound, left_open, right_open)
 }
 
 #' @export
 c_roll_last <- function(DATE, X, left_bound, right_bound, left_open, right_open) {
-    .Call('_VSR_c_roll_last', PACKAGE = 'VSR', DATE, X, left_bound, right_bound, left_open, right_open)
+    .Call(`_VSR_c_roll_last`, DATE, X, left_bound, right_bound, left_open, right_open)
 }
 
 #' @export
 c_roll_quantile <- function(DATE, X, left_bound, right_bound, left_open, right_open, prob) {
-    .Call('_VSR_c_roll_quantile', PACKAGE = 'VSR', DATE, X, left_bound, right_bound, left_open, right_open, prob)
+    .Call(`_VSR_c_roll_quantile`, DATE, X, left_bound, right_bound, left_open, right_open, prob)
 }
 
 #' @export
 c_cummin <- function(X) {
-    .Call('_VSR_c_cummin', PACKAGE = 'VSR', X)
+    .Call(`_VSR_c_cummin`, X)
 }
 
 #' @export
 c_cummax <- function(X) {
-    .Call('_VSR_c_cummax', PACKAGE = 'VSR', X)
+    .Call(`_VSR_c_cummax`, X)
 }
 
 top_index <- function(x, n, ascending = FALSE) {
-    .Call('_VSR_top_index', PACKAGE = 'VSR', x, n, ascending)
+    .Call(`_VSR_top_index`, x, n, ascending)
 }
 
 c_fast_paste0 <- function(str1, str2) {
-    .Call('_VSR_c_fast_paste0', PACKAGE = 'VSR', str1, str2)
+    .Call(`_VSR_c_fast_paste0`, str1, str2)
 }
 
 c_tab <- function(x) {
-    .Call('_VSR_c_tab', PACKAGE = 'VSR', x)
+    .Call(`_VSR_c_tab`, x)
 }
 
 #' @export
 c_fill_locf_na <- function(x) {
-    .Call('_VSR_c_fill_locf_na', PACKAGE = 'VSR', x)
+    .Call(`_VSR_c_fill_locf_na`, x)
 }
 
 c_fill_locf_nonfinite <- function(x) {
-    .Call('_VSR_c_fill_locf_nonfinite', PACKAGE = 'VSR', x)
+    .Call(`_VSR_c_fill_locf_nonfinite`, x)
 }
 

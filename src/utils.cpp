@@ -29,7 +29,8 @@ NumericVector c_fill_locf_nonfinite(NumericVector& x) {
     double prev = x[0];
     out[0] = prev;
     for (size_t i = 1; i < x.length(); i++){
-      if (!(ISNA(x[i]) || ISNAN(x[i]))) prev = x[i];
+      double v = x[i];
+      if (!(ISNA(v) || ISNAN(v) || v == R_PosInf || v == R_NegInf)) prev = x[i];
       out[i] = prev;
     }
     return out;

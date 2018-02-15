@@ -147,6 +147,44 @@ NumericVector c_roll_mean(SEXP DATE, NumericVector& X,
   return c_roll(vec_mean, tt, X, left_bound, right_bound, left_open, right_open);
 }
 
+double vec_sum(int si, int ei, const NumericVector& X) {
+  double accum = 0;
+  for(int i = si; i <= ei; i++){
+    // this NA check doesn't work on integers
+    if (!ISNA(X[i])) {
+      accum += X[i];
+    }
+  }
+  return accum;
+}
+
+//' @export
+// [[Rcpp::export]]
+NumericVector c_roll_sum(SEXP DATE, NumericVector& X, 
+                         double left_bound, double right_bound,
+                         bool left_open, bool right_open){
+  NumericVector tt(DATE);
+  return c_roll(vec_sum, tt, X, left_bound, right_bound, left_open, right_open);
+}
+ 
+double vec_prod(int si, int ei, const NumericVector& X) {
+  double accum = 0;
+  for(int i = si; i <= ei; i++){
+    if (!ISNA(X[i])) {
+      accum *= X[i];
+    }
+  }
+  return accum;
+}
+
+//' @export
+// [[Rcpp::export]]
+NumericVector c_roll_prod(SEXP DATE, NumericVector& X, 
+                          double left_bound, double right_bound,
+                          bool left_open, bool right_open){
+  NumericVector tt(DATE);
+  return c_roll(vec_prod, tt, X, left_bound, right_bound, left_open, right_open);
+}
 
 //' @export
 // [[Rcpp::export]]

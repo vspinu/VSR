@@ -1,6 +1,4 @@
-##' @useDynLib lubridate, .registration=TRUE
 ##' @importFrom Rcpp sourceCpp
-##' @import lubridate 
 ##' @importFrom data.table fread data.table
 ##' @importFrom methods setClass setGeneric new show
 ##'

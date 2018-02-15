@@ -171,6 +171,38 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// c_roll_sum
+NumericVector c_roll_sum(SEXP DATE, NumericVector& X, double left_bound, double right_bound, bool left_open, bool right_open);
+RcppExport SEXP _VSR_c_roll_sum(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type DATE(DATESEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type left_bound(left_boundSEXP);
+    Rcpp::traits::input_parameter< double >::type right_bound(right_boundSEXP);
+    Rcpp::traits::input_parameter< bool >::type left_open(left_openSEXP);
+    Rcpp::traits::input_parameter< bool >::type right_open(right_openSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_roll_sum(DATE, X, left_bound, right_bound, left_open, right_open));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_roll_prod
+NumericVector c_roll_prod(SEXP DATE, NumericVector& X, double left_bound, double right_bound, bool left_open, bool right_open);
+RcppExport SEXP _VSR_c_roll_prod(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type DATE(DATESEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type left_bound(left_boundSEXP);
+    Rcpp::traits::input_parameter< double >::type right_bound(right_boundSEXP);
+    Rcpp::traits::input_parameter< bool >::type left_open(left_openSEXP);
+    Rcpp::traits::input_parameter< bool >::type right_open(right_openSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_roll_prod(DATE, X, left_bound, right_bound, left_open, right_open));
+    return rcpp_result_gen;
+END_RCPP
+}
 // c_roll_first
 NumericVector c_roll_first(SEXP DATE, NumericVector& X, double left_bound, double right_bound, bool left_open, bool right_open);
 RcppExport SEXP _VSR_c_roll_first(SEXP DATESEXP, SEXP XSEXP, SEXP left_boundSEXP, SEXP right_boundSEXP, SEXP left_openSEXP, SEXP right_openSEXP) {
@@ -314,6 +346,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_VSR_c_roll_min", (DL_FUNC) &_VSR_c_roll_min, 6},
     {"_VSR_c_roll_max", (DL_FUNC) &_VSR_c_roll_max, 6},
     {"_VSR_c_roll_mean", (DL_FUNC) &_VSR_c_roll_mean, 6},
+    {"_VSR_c_roll_sum", (DL_FUNC) &_VSR_c_roll_sum, 6},
+    {"_VSR_c_roll_prod", (DL_FUNC) &_VSR_c_roll_prod, 6},
     {"_VSR_c_roll_first", (DL_FUNC) &_VSR_c_roll_first, 6},
     {"_VSR_c_roll_last", (DL_FUNC) &_VSR_c_roll_last, 6},
     {"_VSR_c_roll_quantile", (DL_FUNC) &_VSR_c_roll_quantile, 7},

@@ -70,7 +70,7 @@ macd <- function(x, date, nfast = 12, nslow = nfast*3L, linear = F, cum = F){
     out
 }
 
-##' @rdname
+##' @rdname ema
 wmacd <- function(x, weight, date, nfast = 12, nslow = nfast*4L, linear = F, cum = T){
     fast <- wema(x, weight, date, nfast, linear, cum)
     slow <- wema(x, weight, date, nslow, linear, cum)
