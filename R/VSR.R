@@ -1,13 +1,17 @@
 ##' @importFrom Rcpp sourceCpp
 ##' @importFrom data.table fread data.table
 ##' @importFrom methods setClass setGeneric new show
-##'
 ##' @exportPattern "^[^\\.]"
+#' @useDynLib VSR, .registration=TRUE
 NULL
 
 ## ALIASES
-DF <- data.frame
-DT <- data.table
+DF <- function(...) {
+    do.call(base::data.frame, list(...))
+}
+DT <- function(...) {
+    do.call(data.table::data.table, list(...))
+}
 l <- list
 mfrow <- function(r = 1, c = 1) par(mfrow = c(r, c))
 mfcol <- function(r = 1, c = 1) par(mfcol = c(c, r))

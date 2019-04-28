@@ -15,7 +15,7 @@ NumericVector c_cumema(NumericVector& X, NumericVector& days, double n){
 
   if (N > 0) {
     int prev = 0;
-    while (ISNA(X[prev])) {
+    while (ISNA(X[prev] && prev < N)) {
       out[prev] = NA_REAL;
       prev++;
     }
@@ -48,7 +48,7 @@ NumericVector c_ema(NumericVector& X, NumericVector& days, double n){
 
   if (N > 0) {
     int prev = 0;
-    while (ISNA(X[prev])) {
+    while (ISNA(X[prev]) && prev < N) {
       out[prev] = NA_REAL;
       prev++;
     }
@@ -83,7 +83,7 @@ NumericVector c_ema_lin(NumericVector& X, NumericVector& days, double n){
 
   if (N > 0) {
     int prev = 0;
-    while (ISNA(X[prev])){
+    while (ISNA(X[prev]) && prev < N){
       prev++;
       out[prev] = X[prev];
     }

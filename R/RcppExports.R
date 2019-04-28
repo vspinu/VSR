@@ -61,6 +61,11 @@ c_roll_mean <- function(DATE, X, left_bound, right_bound, left_open, right_open)
 }
 
 #' @export
+c_roll_sd <- function(DATE, X, left_bound, right_bound, left_open, right_open) {
+    .Call(`_VSR_c_roll_sd`, DATE, X, left_bound, right_bound, left_open, right_open)
+}
+
+#' @export
 c_roll_sum <- function(DATE, X, left_bound, right_bound, left_open, right_open) {
     .Call(`_VSR_c_roll_sum`, DATE, X, left_bound, right_bound, left_open, right_open)
 }
@@ -93,6 +98,11 @@ c_cummin <- function(X) {
 #' @export
 c_cummax <- function(X) {
     .Call(`_VSR_c_cummax`, X)
+}
+
+#' @export
+c_buy_sell_signal <- function(X, qenter_sell = .3, qexit_sell = .5, qenter_buy = .7, qexit_buy = .5) {
+    .Call(`_VSR_c_buy_sell_signal`, X, qenter_sell, qexit_sell, qenter_buy, qexit_buy)
 }
 
 top_index <- function(x, n, ascending = FALSE) {

@@ -41,7 +41,6 @@ norm_country_names <- function(country){
                    "Russia", "Russian Federation",
                    "Western Samoa", "Samoa",
                    "Faroe Islands", "Faeroe Islands",
-                   "Côte d'Ivoire", "Ivory Coast",
                    "State of Palestine", "Palestine", 
                    "Guinea Bissau", "Guinea",
                    "United Republic of Tanzania", "Tanzania", 

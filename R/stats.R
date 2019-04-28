@@ -92,3 +92,29 @@ sparsity <- function(mat){
         sum(mat > 0)/N
     }
 }
+
+## ## More regular natural splines
+## knots <- list(
+##   dmax = seq.int(0, .3, .05),
+##   dmin = seq.int(0, -.3, -.05),
+##   dsize = seq.int(-0.3, .3, .05), 
+##   pdiff10 = quantile(gos$pdiff10, seq.int(.1, .9, by = .05)),
+##   pdiff1 = quantile(gos$pdiff1, seq.int(.1, .9, by = .05)))
+
+## ns2 <- function(obj, knots){
+##   nm <- as.character(substitute(obj))
+##   knots <- knots[[nm]]
+##   ## use first-last as boundary knots
+##   fl <- c(1, length(knots))
+##   ns(obj, knots = knots[-fl], Boundary.knots = knots[fl])
+## }
+
+
+ns2 <- function(x, nknots = 5){
+  start <- .5/nknots
+  end <- 1 - start
+  knots <- quantile(x, seq.int(start, end, length = knots))
+  ## use first-last as boundary knots
+  bknots <- c(1, length(knots))
+  ns(obj, knots = knots, Boundary.knots = knots[bknots])
+}

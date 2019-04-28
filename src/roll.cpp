@@ -4,6 +4,7 @@
 #include <vector>
 #include <forward_list>
 #include <functional>
+#include <cmath>
 
 // Enable C++11 via plugin
 // [[Rcpp::plugins(cpp11)]]
@@ -105,6 +106,55 @@ inline double vec_max(int si, int ei, const NumericVector& X) {
   if (accum == R_NegInf) return NA_REAL;
   else return accum;
 }
+ 
+double vec_mean(int si, int ei, const NumericVector& X) {
+  double accum = 0;
+  size_t nr = 0;
+  for(int i = si; i <= ei; i++){
+    // this NA check doesn't work on integers
+    if (!ISNA(X[i])){
+      accum += X[i];
+      nr++;
+    }
+  }
+  if (nr) return accum/nr;
+  else return NA_REAL;
+}
+
+double vec_sd(int si, int ei, const NumericVector& X) {
+  double mean = vec_mean(si, ei, X);
+  double accum = 0.0;
+  size_t nr = 0;
+  for(int i = si; i <= ei; i++){
+    // this NA check doesn't work on integers
+    if (!ISNA(X[i])){
+      accum += std::pow(X[i] - mean, 2.0);
+      nr++;
+    }
+  }
+  if (nr) return std::sqrt(accum/nr);
+  else return NA_REAL;
+}
+
+double vec_sum(int si, int ei, const NumericVector& X) {
+  double accum = 0.0;
+  for(int i = si; i <= ei; i++){
+    if (!ISNA(X[i])) {
+      accum += X[i];
+    }
+  }
+  return accum;
+}
+ 
+double vec_prod(int si, int ei, const NumericVector& X) {
+  double accum = 1.0;
+  for(int i = si; i <= ei; i++){
+    if (!ISNA(X[i])) {
+      accum *= X[i];
+    }
+  }
+  return accum;
+}
 
 //' @export
 // [[Rcpp::export]]
@@ -124,20 +174,6 @@ NumericVector c_roll_max(SEXP DATE, NumericVector& X,
   return c_roll(vec_max, tt, X, left_bound, right_bound, left_open, right_open);
 }
 
-double vec_mean(int si, int ei, const NumericVector& X) {
-  double accum = 0;
-  size_t nr = 0;
-  for(int i = si; i <= ei; i++){
-    // this NA check doesn't work on integers
-    if (!ISNA(X[i])){
-      accum += X[i];
-      nr++;
-    }
-  }
-  if (nr) return accum/nr;
-  else return NA_REAL;
-}
-
 //' @export
 // [[Rcpp::export]]
 NumericVector c_roll_mean(SEXP DATE, NumericVector& X, 
@@ -147,15 +183,13 @@ NumericVector c_roll_mean(SEXP DATE, NumericVector& X,
   return c_roll(vec_mean, tt, X, left_bound, right_bound, left_open, right_open);
 }
 
-double vec_sum(int si, int ei, const NumericVector& X) {
-  double accum = 0;
-  for(int i = si; i <= ei; i++){
-    // this NA check doesn't work on integers
-    if (!ISNA(X[i])) {
-      accum += X[i];
-    }
-  }
-  return accum;
+//' @export
+// [[Rcpp::export]]
+NumericVector c_roll_sd(SEXP DATE, NumericVector& X, 
+                        double left_bound, double right_bound,
+                        bool left_open, bool right_open){
+  NumericVector tt(DATE);
+  return c_roll(vec_sd, tt, X, left_bound, right_bound, left_open, right_open);
 }
 
 //' @export
@@ -167,15 +201,6 @@ NumericVector c_roll_sum(SEXP DATE, NumericVector& X,
   return c_roll(vec_sum, tt, X, left_bound, right_bound, left_open, right_open);
 }
  
-double vec_prod(int si, int ei, const NumericVector& X) {
-  double accum = 0;
-  for(int i = si; i <= ei; i++){
-    if (!ISNA(X[i])) {
-      accum *= X[i];
-    }
-  }
-  return accum;
-}
 
 //' @export
 // [[Rcpp::export]]

@@ -118,6 +118,21 @@ which_qrange <- function(var, range = c(.01, .99), max_levels = 20){
 }
 
 ##' @export
+qwinsorize <- function(var, range = c(0.05, .95)) {
+    stopifnot(is.numeric(var))
+    qs <- quantile(var, range)
+    var[var > qs[[2]]] <- qs[[2]]
+    var[var < qs[[1]]] <- qs[[1]]
+    var
+}
+
+##' @export
+norm01 <- function(var) {
+    min <- min(var)
+    (var - min)/(max(var) - min)
+}
+
+##' @export
 setGeneric("qrange", 
            def = function(var, range = c(.05, .95), max_levels = 20, ...){
                if(is.null(range)) return(var)
@@ -138,6 +153,12 @@ setGeneric("qrange",
         droplevels(var[-which, ])
     else 
         var[-which, ]
+}
+
+##' @export
+dups <- function(x) {
+    xd <- x[duplicated(x)]
+    x %in% xd
 }
 
 ##' @export
