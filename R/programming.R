@@ -1,13 +1,15 @@
 assignCommandArgs <- function(..., envir = .GlobalEnv, collapse = T){
     dots <- list(...)
-    if(any(sapply(dots, is.null)))
-        stop("default arguments cannot be NULL. Need to infer the type.")
-    stopifnot(all(nzchar(names(dots))))
+    if (!all(nzchar(names(dots))))
+      stop("All command arguments must be named")
     args <- commandArgs(T)
-    for(i in seq_along(args))
-        dots[[i]] <- as(args[[i]], class(dots[[i]]))
+    for(i in seq_along(args)) {
+      default <- dots[[i]]
+      class <- if (is.null(default)) "character" else class(default)
+      dots[[i]] <- as(args[[i]], class)
+    }
     for(nm in names(dots)){
-        assign(nm, dots[[nm]], envir = envir)
+      assign(nm, dots[[nm]], envir = envir)
     }
     out <-
         if(collapse){
@@ -17,13 +19,14 @@ assignCommandArgs <- function(..., envir = .GlobalEnv, collapse = T){
     invisible(out)
 }
 
-catlog <- function(...){
-    str <- paste(..., collapse = "", sep = "")
-    if(grepl("^\n", str)){
-        cat("\n")
-        str <- substring(str, 2)
-    }
-    cat(paste(sprintf("[%s] ", Sys.time()), str, "\n", sep = "", collapse = ""))
+catlog <- function(..., .env = parent.frame()) {
+  str <- paste(..., collapse = "", sep = "")
+  str <- paste(glue(str, .envir = .env), collapse = " ")
+  cat(glue("[{Sys.time()}] {str}"), "\n")
+}
+
+catc <- function(...) {
+  do.call(cat, lapply(c(list(...), "\n"), as.character))
 }
 
 catf <- function(fmt, ...){
@@ -238,39 +241,39 @@ merge_lists <- function(...){
 numerize <- function(x,
                      date2int = F, fact2int = F, chr2fact = F,
                      chr_drop = T, fact_drop = F, date_drop = F){
-    if(is.data.frame(x))
-        cdtit(x, numerize(it,
-                          date2int = date2int, fact2int = fact2int, chr2fact = chr2fact,
-                          date_drop = date_drop, fact_drop = fact_drop, chr_drop = chr_drop))
-    else
-        if((is.POSIXt(x) || is.Date(x))){
-        if(date2int)
-            as.integer(x)
-        else if(date_drop)
-            NULL
-        else x
+  if(is.data.frame(x))
+    cdtit(x, numerize(it,
+                      date2int = date2int, fact2int = fact2int, chr2fact = chr2fact,
+                      date_drop = date_drop, fact_drop = fact_drop, chr_drop = chr_drop))
+  else
+    if((is.POSIXt(x) || is.Date(x))){
+      if(date2int)
+        as.integer(x)
+      else if(date_drop)
+        NULL
+      else x
     } else if(is.factor(x)){
-        if(fact2int)
-            as.integer(x)
-        else if(fact_drop)
-            NULL
-        else x
+      if(fact2int)
+        as.integer(x)
+      else if(fact_drop)
+        NULL
+      else x
     } else if(is.character(x)) {
-        if(chr2fact)
-            as.factor(x)
-        else if(chr_drop)
-            NULL
-        else x          
+      if(chr2fact)
+        as.factor(x)
+      else if(chr_drop)
+        NULL
+      else x          
     } else x
 }
 
 ## hierarchical get
 hget <- function(hlist, hnames){
-    if(!is.list(hnames))
-        if(length(hnames) == 1) hlist[[hnames]]
-        else Recall(hlist[[hnames[[1]]]], hnames[-1])
-    else
-        lapply(hnames, function(nm) hget(hlist, nm))
+  if(!is.list(hnames))
+    if(length(hnames) == 1) hlist[[hnames]]
+    else Recall(hlist[[hnames[[1]]]], hnames[-1])
+  else
+    lapply(hnames, function(nm) hget(hlist, nm))
 }
 
 ## tt <- list(a = list(b = 232, c = list(a = 33, b = "aaa")))

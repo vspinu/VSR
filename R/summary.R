@@ -10,12 +10,12 @@
     out
 }
     
-qcut <- function(x, k = 10, add_breaks = c(), exclude = NULL){
+qcut <- function(x, k = 10, add_breaks = c(), exclude = NULL, ...){
     if(is.numeric(x) || inherits(x, "POSIXt")){
         breaks <- .break(x, add_breaks, k)
         if(inherits(x, "POSIXt"))
             breaks <- .POSIXct(breaks)
-        out <- cut(x, breaks, include.lowest = T, ordered_result = T)
+        out <- cut(x, breaks, include.lowest = T, ordered_result = T, ...)
         factor(out, exclude = exclude)
     } else x
 }
@@ -35,13 +35,38 @@ qcut <- function(x, k = 10, add_breaks = c(), exclude = NULL){
   }
 }
 
-tab <- function(...){
+tab <- function(..., sort = TRUE){
   out <- base::table(..., useNA = "ifany")
-  if(length(dim(out)) == 1) sort(out, decreasing = T)
+  if(sort && length(dim(out)) == 1) sort(out, decreasing = T)
   else out
 }
 
-ftab <- function(obj, topn = NULL){
+ftab <- function(...) {
+  ftable(..., exclude = NULL)
+}
+
+pftab <- function(..., margin = NULL, round = 5){
+  round(prop.table(ftab(...), margin = margin), round)
+}
+
+pftab1 <- function(...){
+  prop.table(ftab(...), margin = 1)
+}
+
+pftab2 <- function(...){
+  prop.table(ftab(...), margin = 2)
+}
+
+ptab <- ptable <- function(..., margin = NULL, round = 5, sort = TRUE){
+  round(prop.table(tab(..., sort = sort), margin), round)
+}
+
+qtab <- qtable <- function(..., k = 10){
+  dots <- lapply(list(...), qcut, k = k)
+  do.call(base::table, dots)
+}
+
+fast_table <- function(obj, topn = NULL){
     out <- c_tab(obj)
     if(is.null(topn))
         ## fixme: this case dosn't re-order
@@ -52,15 +77,6 @@ ftab <- function(obj, topn = NULL){
         list(vals = out[["vals"]][topix],
              counts = out[["counts"]][topix])
     }
-}
-
-ptab <- ptable <- function(..., margin = NULL){
-  prop.table(base::table(...), margin)
-}
-
-qtab <- qtable <- function(..., k = 10){
-  dots <- lapply(list(...), qcut, k = k)
-  do.call(base::table, dots)
 }
 
 len <- length
@@ -120,10 +136,15 @@ which_qrange <- function(var, range = c(.01, .99), max_levels = 20){
 ##' @export
 qwinsorize <- function(var, range = c(0.05, .95)) {
     stopifnot(is.numeric(var))
-    qs <- quantile(var, range)
+    qs <- quantile(var, range, na.rm = T)
     var[var > qs[[2]]] <- qs[[2]]
     var[var < qs[[1]]] <- qs[[1]]
     var
+}
+
+##' @export
+qwinsorize1 <- function(var) {
+  qwinsorize(var, range = c(0.01, 0.99))
 }
 
 ##' @export

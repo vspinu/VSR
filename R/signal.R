@@ -1,11 +1,20 @@
 
 #' @export
-buy_sell_signal <- function(x, sell_entry = .3, buy_entry = .7,
+buy_sell_signal <- function(x, sell_entry = .5, buy_entry = .5,
                             sell_exit = buy_entry, buy_exit = sell_entry,
-                            scale = TRUE) {
-    if (scale) x <- scale(x)
-    qs <- quantile(x, c(sell_entry, sell_exit, buy_exit, buy_entry))
-    c_buy_sell_signal(x, qs[[1]], qs[[2]], qs[[4]], qs[[3]])
+                            scale = FALSE, skip = FALSE, do_quantiles = FALSE) {
+  eps <- 1e-8
+  stopifnot(sell_entry <= .5 + eps)
+  stopifnot(buy_entry + eps >= .5)
+  stopifnot(sell_exit + eps >= sell_entry)
+  stopifnot(buy_exit <= buy_entry + eps)
+  stopifnot(sell_entry <= buy_exit + eps)
+  stopifnot(sell_exit <= buy_entry + eps)
+  if (scale) x <- scale(x)
+  qs <- c(sell_entry, sell_exit, buy_exit, buy_entry)
+  if (do_quantiles)
+    qs <- quantile(x, qs)
+  c_buy_sell_signal(x, skip, qs[[1]], qs[[2]], qs[[4]], qs[[3]])
 }
 
 #' @export

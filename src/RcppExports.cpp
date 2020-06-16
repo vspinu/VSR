@@ -291,17 +291,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // c_buy_sell_signal
-NumericVector c_buy_sell_signal(NumericVector& X, double qenter_sell, double qexit_sell, double qenter_buy, double qexit_buy);
-RcppExport SEXP _VSR_c_buy_sell_signal(SEXP XSEXP, SEXP qenter_sellSEXP, SEXP qexit_sellSEXP, SEXP qenter_buySEXP, SEXP qexit_buySEXP) {
+NumericVector c_buy_sell_signal(NumericVector& X, LogicalVector& skip, double qenter_sell, double qexit_sell, double qenter_buy, double qexit_buy);
+RcppExport SEXP _VSR_c_buy_sell_signal(SEXP XSEXP, SEXP skipSEXP, SEXP qenter_sellSEXP, SEXP qexit_sellSEXP, SEXP qenter_buySEXP, SEXP qexit_buySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< LogicalVector& >::type skip(skipSEXP);
     Rcpp::traits::input_parameter< double >::type qenter_sell(qenter_sellSEXP);
     Rcpp::traits::input_parameter< double >::type qexit_sell(qexit_sellSEXP);
     Rcpp::traits::input_parameter< double >::type qenter_buy(qenter_buySEXP);
     Rcpp::traits::input_parameter< double >::type qexit_buy(qexit_buySEXP);
-    rcpp_result_gen = Rcpp::wrap(c_buy_sell_signal(X, qenter_sell, qexit_sell, qenter_buy, qexit_buy));
+    rcpp_result_gen = Rcpp::wrap(c_buy_sell_signal(X, skip, qenter_sell, qexit_sell, qenter_buy, qexit_buy));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -385,7 +386,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_VSR_c_roll_quantile", (DL_FUNC) &_VSR_c_roll_quantile, 7},
     {"_VSR_c_cummin", (DL_FUNC) &_VSR_c_cummin, 1},
     {"_VSR_c_cummax", (DL_FUNC) &_VSR_c_cummax, 1},
-    {"_VSR_c_buy_sell_signal", (DL_FUNC) &_VSR_c_buy_sell_signal, 5},
+    {"_VSR_c_buy_sell_signal", (DL_FUNC) &_VSR_c_buy_sell_signal, 6},
     {"_VSR_top_index", (DL_FUNC) &_VSR_top_index, 3},
     {"_VSR_c_fast_paste0", (DL_FUNC) &_VSR_c_fast_paste0, 2},
     {"_VSR_c_tab", (DL_FUNC) &_VSR_c_tab, 1},

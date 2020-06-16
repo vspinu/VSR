@@ -101,8 +101,8 @@ c_cummax <- function(X) {
 }
 
 #' @export
-c_buy_sell_signal <- function(X, qenter_sell = .3, qexit_sell = .5, qenter_buy = .7, qexit_buy = .5) {
-    .Call(`_VSR_c_buy_sell_signal`, X, qenter_sell, qexit_sell, qenter_buy, qexit_buy)
+c_buy_sell_signal <- function(X, skip, qenter_sell = .3, qexit_sell = .5, qenter_buy = .7, qexit_buy = .5) {
+    .Call(`_VSR_c_buy_sell_signal`, X, skip, qenter_sell, qexit_sell, qenter_buy, qexit_buy)
 }
 
 top_index <- function(x, n, ascending = FALSE) {
