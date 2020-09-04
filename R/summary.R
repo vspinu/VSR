@@ -36,7 +36,7 @@ qcut <- function(x, k = 10, add_breaks = c(), exclude = NULL, ...){
 }
 
 tab <- function(..., sort = TRUE){
-  out <- base::table(..., useNA = "ifany")
+  out <- base::table(..., useNA = "ifany", deparse.level = 2)
   if(sort && length(dim(out)) == 1) sort(out, decreasing = T)
   else out
 }

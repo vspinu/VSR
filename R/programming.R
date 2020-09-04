@@ -82,13 +82,20 @@ roxy_params <- function(file){
   params
 }
 
-last <- function(x){
-    if (is.data.frame(x))
-        x[NROW(x),]
-    else if (!length(x))
-        x
-    else
-        x[[length(x)]]
+last <- function(x, na.rm = TRUE) {
+  if (is.data.frame(x))
+    x[NROW(x),]
+  else if (length(x) == 0)
+    x
+  else {
+    if (na.rm) {
+      x <- x[!is.na(x)]
+      if (length(x) == 0) x
+      else x[[length(x)]]
+    } else {
+      x[[length(x)]]
+    }
+  }
 }
 
 butlast <- function(x){
