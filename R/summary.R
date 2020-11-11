@@ -45,8 +45,8 @@ ftab <- function(...) {
   ftable(..., exclude = NULL)
 }
 
-pftab <- function(..., margin = NULL, round = 5){
-  round(prop.table(ftab(...), margin = margin), round)
+pftab <- function(..., margin = NULL, round = 5) {
+  ftable(round(prop.table(tab(...), margin = margin), round))
 }
 
 pftab1 <- function(...){

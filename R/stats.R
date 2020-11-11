@@ -118,3 +118,26 @@ ns2 <- function(x, nknots = 5){
   bknots <- c(1, length(knots))
   ns(obj, knots = knots, Boundary.knots = knots[bknots])
 }
+
+
+perf_metrics <- function(predprobs, actual, cutoff = .5, plot = TRUE, confusion = TRUE) {
+  actual <- as.logical(actual)
+  library(ggfortify)
+  if (plot) {
+    pred <- ROCR::prediction(predprobs, actual)
+    dplot <- ggplot(data.frame(pred = predprobs, actual = as.factor(actual))) +
+      geom_density(aes(x = pred, fill = actual), alpha = .3)
+    gridExtra::grid.arrange(
+                 dplot,
+                 autoplot(ROCR::performance(pred, "tpr", "fpr")),
+                 autoplot(ROCR::performance(pred, "npv", "tnr")),
+                 autoplot(ROCR::performance(pred, "ppv", "tpr")),
+                 autoplot(ROCR::performance(pred, "ppv")),
+                 autoplot(ROCR::performance(pred, "acc"), )
+    )
+  }
+  if (confusion) {
+    pmat <- table(predicted = predprobs > cutoff, actual = actual)
+    caret::confusionMatrix(pmat, positive = "TRUE")
+  }
+}
