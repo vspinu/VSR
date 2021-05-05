@@ -35,18 +35,19 @@ qcut <- function(x, k = 10, add_breaks = c(), exclude = NULL, ...){
   }
 }
 
-tab <- function(..., sort = TRUE){
+tab <- function(..., sort = TRUE, margin = NULL){
   out <- base::table(..., useNA = "ifany", deparse.level = 2)
   if(sort && length(dim(out)) == 1) sort(out, decreasing = T)
   else out
 }
 
-ftab <- function(...) {
+ftab <- function(..., margin = NULL) {
   ftable(..., exclude = NULL)
 }
 
 pftab <- function(..., margin = NULL, round = 5) {
-  ftable(round(prop.table(tab(...), margin = margin), round))
+  out <- base::table(..., useNA = "ifany", deparse.level = 2)
+  ftable(round(prop.table(out, margin = margin), round))
 }
 
 pftab1 <- function(...){

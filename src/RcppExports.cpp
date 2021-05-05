@@ -291,18 +291,60 @@ BEGIN_RCPP
 END_RCPP
 }
 // c_buy_sell_signal
-NumericVector c_buy_sell_signal(NumericVector& X, LogicalVector& skip, double qenter_sell, double qexit_sell, double qenter_buy, double qexit_buy);
-RcppExport SEXP _VSR_c_buy_sell_signal(SEXP XSEXP, SEXP skipSEXP, SEXP qenter_sellSEXP, SEXP qexit_sellSEXP, SEXP qenter_buySEXP, SEXP qexit_buySEXP) {
+NumericVector c_buy_sell_signal(NumericVector& X, LogicalVector& skip, double sell_entry, double sell_exit, double buy_exit, double buy_entry);
+RcppExport SEXP _VSR_c_buy_sell_signal(SEXP XSEXP, SEXP skipSEXP, SEXP sell_entrySEXP, SEXP sell_exitSEXP, SEXP buy_exitSEXP, SEXP buy_entrySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
     Rcpp::traits::input_parameter< LogicalVector& >::type skip(skipSEXP);
-    Rcpp::traits::input_parameter< double >::type qenter_sell(qenter_sellSEXP);
-    Rcpp::traits::input_parameter< double >::type qexit_sell(qexit_sellSEXP);
-    Rcpp::traits::input_parameter< double >::type qenter_buy(qenter_buySEXP);
-    Rcpp::traits::input_parameter< double >::type qexit_buy(qexit_buySEXP);
-    rcpp_result_gen = Rcpp::wrap(c_buy_sell_signal(X, skip, qenter_sell, qexit_sell, qenter_buy, qexit_buy));
+    Rcpp::traits::input_parameter< double >::type sell_entry(sell_entrySEXP);
+    Rcpp::traits::input_parameter< double >::type sell_exit(sell_exitSEXP);
+    Rcpp::traits::input_parameter< double >::type buy_exit(buy_exitSEXP);
+    Rcpp::traits::input_parameter< double >::type buy_entry(buy_entrySEXP);
+    rcpp_result_gen = Rcpp::wrap(c_buy_sell_signal(X, skip, sell_entry, sell_exit, buy_exit, buy_entry));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_buy_sell_signal_interval
+NumericVector c_buy_sell_signal_interval(NumericVector& X, double sell1, double sell2, double buy1, double buy2);
+RcppExport SEXP _VSR_c_buy_sell_signal_interval(SEXP XSEXP, SEXP sell1SEXP, SEXP sell2SEXP, SEXP buy1SEXP, SEXP buy2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type sell1(sell1SEXP);
+    Rcpp::traits::input_parameter< double >::type sell2(sell2SEXP);
+    Rcpp::traits::input_parameter< double >::type buy1(buy1SEXP);
+    Rcpp::traits::input_parameter< double >::type buy2(buy2SEXP);
+    rcpp_result_gen = Rcpp::wrap(c_buy_sell_signal_interval(X, sell1, sell2, buy1, buy2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_entry_exit_signal
+NumericVector c_entry_exit_signal(NumericVector& X, double exit, double entry, bool buy);
+RcppExport SEXP _VSR_c_entry_exit_signal(SEXP XSEXP, SEXP exitSEXP, SEXP entrySEXP, SEXP buySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type exit(exitSEXP);
+    Rcpp::traits::input_parameter< double >::type entry(entrySEXP);
+    Rcpp::traits::input_parameter< bool >::type buy(buySEXP);
+    rcpp_result_gen = Rcpp::wrap(c_entry_exit_signal(X, exit, entry, buy));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_butterfly_signal
+NumericVector c_butterfly_signal(NumericVector& X, double sell_entry, double buy_entry);
+RcppExport SEXP _VSR_c_butterfly_signal(SEXP XSEXP, SEXP sell_entrySEXP, SEXP buy_entrySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type sell_entry(sell_entrySEXP);
+    Rcpp::traits::input_parameter< double >::type buy_entry(buy_entrySEXP);
+    rcpp_result_gen = Rcpp::wrap(c_butterfly_signal(X, sell_entry, buy_entry));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -387,6 +429,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_VSR_c_cummin", (DL_FUNC) &_VSR_c_cummin, 1},
     {"_VSR_c_cummax", (DL_FUNC) &_VSR_c_cummax, 1},
     {"_VSR_c_buy_sell_signal", (DL_FUNC) &_VSR_c_buy_sell_signal, 6},
+    {"_VSR_c_buy_sell_signal_interval", (DL_FUNC) &_VSR_c_buy_sell_signal_interval, 5},
+    {"_VSR_c_entry_exit_signal", (DL_FUNC) &_VSR_c_entry_exit_signal, 4},
+    {"_VSR_c_butterfly_signal", (DL_FUNC) &_VSR_c_butterfly_signal, 3},
     {"_VSR_top_index", (DL_FUNC) &_VSR_top_index, 3},
     {"_VSR_c_fast_paste0", (DL_FUNC) &_VSR_c_fast_paste0, 2},
     {"_VSR_c_tab", (DL_FUNC) &_VSR_c_tab, 1},

@@ -101,8 +101,23 @@ c_cummax <- function(X) {
 }
 
 #' @export
-c_buy_sell_signal <- function(X, skip, qenter_sell = .3, qexit_sell = .5, qenter_buy = .7, qexit_buy = .5) {
-    .Call(`_VSR_c_buy_sell_signal`, X, skip, qenter_sell, qexit_sell, qenter_buy, qexit_buy)
+c_buy_sell_signal <- function(X, skip, sell_entry = .3, sell_exit = .5, buy_exit = .7, buy_entry = .5) {
+    .Call(`_VSR_c_buy_sell_signal`, X, skip, sell_entry, sell_exit, buy_exit, buy_entry)
+}
+
+#' @export
+c_buy_sell_signal_interval <- function(X, sell1 = .3, sell2 = .5, buy1 = .7, buy2 = .5) {
+    .Call(`_VSR_c_buy_sell_signal_interval`, X, sell1, sell2, buy1, buy2)
+}
+
+#' @export
+c_entry_exit_signal <- function(X, exit = .5, entry = .7, buy = TRUE) {
+    .Call(`_VSR_c_entry_exit_signal`, X, exit, entry, buy)
+}
+
+#' @export
+c_butterfly_signal <- function(X, sell_entry = .3, buy_entry = .7) {
+    .Call(`_VSR_c_butterfly_signal`, X, sell_entry, buy_entry)
 }
 
 top_index <- function(x, n, ascending = FALSE) {
