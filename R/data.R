@@ -109,8 +109,9 @@ readbindRDS <- function(dir, beg = NULL, end = NULL, key = NULL, recursive = TRU
     warning("No rds files in {dir}. Wrong dir?")
 
   fnames <- basename(files)
-  begs <- ymd(sub("^([-0-9]+)\\.\\..*", "\\1", fnames))
-  ends <- ymd(sub("^([-0-9]+)\\.\\.([-0-9]+).*", "\\2", fnames))
+  parser <- if (grepl("T", fnames[[1]])) ymd_hms else ymd
+  begs <- parser(sub("^([-0-9T:]+)\\.\\..*", "\\1", fnames))
+  ends <- parser(sub("^([-0-9T:]+)\\.\\.([-0-9T:]+).*", "\\2", fnames))
 
   if (!is.null(beg) || !is.null(end)) {
     which <- TRUE

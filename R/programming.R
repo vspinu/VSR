@@ -1,22 +1,45 @@
-assignCommandArgs <- function(..., envir = .GlobalEnv, collapse = T){
-    dots <- list(...)
+
+#' @details `assignCommandArgs()`: Simple utility for automatic assignment and
+#'   type conversion of command line arguments. Each argument supplied to
+#'   command line is matched to arguments in `...` and converted to the type of
+#'   that argument. Tail arguments not supplied at command line will be assigned
+#'   their default values. See examples.
+#' @param ... key=value pairs to be assigned into `.env`
+#' @param .env environment where to assign arguments in `...`
+#' @param .args commandArgs to be assigned
+#'
+#' @examples
+#'
+#' \dontrun{
+#'    ## Script accepts 3 arguments, datetime `date`, string `bank` and logical `force`.
+#'    assignCommandArgs(date = now(), bank = "targobank", force = FALSE)
+#' }
+#' @rdname programming
+#' @export
+assignCommandArgs <- function(..., .env = .GlobalEnv, .args = commandArgs(TRUE)) {
+    dots <- dots_list(...)
     if (!all(nzchar(names(dots))))
       stop("All command arguments must be named")
-    args <- commandArgs(T)
-    for(i in seq_along(args)) {
+    if (length(.args) > length(dots)) {
+      stop(glue("Number of command line arguments too large ({length(.args)}). Possible arguments {paste(names(dots), collapse =',')}."))
+    }
+    for(i in seq_along(.args)) {
       default <- dots[[i]]
-      class <- if (is.null(default)) "character" else class(default)
-      dots[[i]] <- as(args[[i]], class)
+      arg <- .args[[i]]
+      if (tolower(arg) %in% c("_", "nil", "null")) {
+        dots[i] <- list(NULL)
+      } else {
+        dots[[i]] <-
+          if (is.null(default)) arg
+          else if (inherits(default, "POSIXt")) as.POSIXct(arg)
+          else if (inherits(default, "Date")) as.Date(arg)
+          else as(arg, class(default)[[1]])
+      }
     }
     for(nm in names(dots)){
-      assign(nm, dots[[nm]], envir = envir)
+      assign(nm, dots[[nm]], envir = .env)
     }
-    out <-
-        if(collapse){
-            paste(lapply(dots, as.character), collapse = "_")
-        } else
-            dots
-    invisible(out)
+    invisible(dots)
 }
 
 catlog <- function(..., .env = parent.frame()) {
@@ -370,4 +393,27 @@ fast_paste0 <- function(str1, str2){
         }
     }
     c_fast_paste0(str1, str2)
+}
+
+
+renv_package_deps <- function(lockfile = NULL) {
+  packs <- names(renv:::lockfile(lockfile)$data()$Packages)
+
+  suppressPackageStartupMessages({
+    library(dplyr)
+    library(purrr)
+  })
+
+  cat("=== pkg --> dependencies ===\n")
+  cat(paste(packs, "-->", map_chr(packs, ~ paste(names(renv:::renv_package_dependencies(.)), collapse = ","))), sep = "\n")
+
+  cat("=== pkg <-- dependents ===\n")
+  set_names(packs) %>%
+    map_dfr(~ list(dep = setdiff(names(renv:::renv_package_dependencies(.)), .)), .id = "pack") %>%
+    group_by(dep) %>%
+    summarise(pkg = paste(pack, collapse = ",")) %>%
+    ungroup() %>%
+    arrange(pkg) %>%
+    with(paste(dep, " <-- ", pkg)) %>%
+    cat(sep = "\n")
 }

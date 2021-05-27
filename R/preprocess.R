@@ -104,3 +104,14 @@ balance_factor <- function(f, nlev = NULL, min_in_lev = NULL) {
     levels(out) <- df[, new_levs[match(levels(out), orig_levs)]]
     out
 }
+
+
+#' @details `ndifftime()`: is essentially `as.numeric(difftime(...))` which doesn't
+#'   "guess" the unit by default.
+#' @name conversion
+#' @export
+#' @param time1,time2 date-times supplied to `numdifftime`.
+#' @param units conversion unit for `difftime`.
+numdifftime <- function(time1, time2, units = c("secs", "mins", "hours", "days", "weeks")) {
+  as.numeric(difftime(time1, time2, units = match.arg(units)))
+}
